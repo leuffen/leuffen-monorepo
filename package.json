@@ -1,0 +1,33 @@
+{
+  "name": "@leuffen/source",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "nx run-many -t build",
+    "format": "nx format:write",
+    "format:check": "nx format:check",
+    "graph": "nx graph",
+    "lint": "nx run-many -t lint",
+    "test": "nx run-many -t test",
+    "typecheck": "nx run-many -t typecheck"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@nx/eslint": "^22.6.5",
+    "@nx/eslint-plugin": "^22.6.5",
+    "@nx/js": "^22.7.1",
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.5",
+    "jsonc-eslint-parser": "^2.4.0",
+    "nx": "^22.6.5",
+    "prettier": "~3.6.2",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.33.1"
+  }
+}
