@@ -4,10 +4,10 @@
     "declaration": true,
     "declarationMap": true,
     "noEmit": false,
-    "outDir": "../../dist/packages/demo",
-    "rootDir": "src",
-    "tsBuildInfoFile": "../../dist/packages/demo/tsconfig.lib.tsbuildinfo"
+    "outDir": "dist",
+    "rootDir": ".",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
+  "include": ["index.ts"],
+  "exclude": ["*.spec.ts", "*.test.ts"]
 }
