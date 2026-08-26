@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "Reference package for the Leuffen Nx monorepo.",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "./index.css"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,10 +14,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./index.css": "./index.css",
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
+    "index.css",
     "README.md"
   ],
   "dependencies": {
