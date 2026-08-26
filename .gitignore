@@ -1,0 +1,27 @@
+# dependencies
+node_modules
+
+# Nx
+.nx
+dist
+tmp
+
+# tests
+coverage
+
+# editors
+.idea
+.vscode
+*.sublime-workspace
+
+# logs
+npm-debug.log*
+yarn-error.log*
+
+# system files
+.DS_Store
+Thumbs.db
+
+# generated tool files
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
