@@ -19,11 +19,22 @@
           "targetName": "typecheck"
         },
         "build": {
-          "targetName": "build",
+          "targetName": "tsc:build",
           "configName": "tsconfig.lib.json",
-          "buildDepsName": "build-deps",
-          "watchDepsName": "watch-deps"
+          "buildDepsName": "tsc:build-deps",
+          "watchDepsName": "tsc:watch-deps"
         }
+      }
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "devTargetName": "dev",
+        "previewTargetName": "preview",
+        "typecheckTargetName": "vite:typecheck"
       }
     }
   ],
@@ -36,6 +47,11 @@
     },
     "lint": {
       "cache": true
+    },
+    "test": {
+      "cache": true,
+      "inputs": ["default", "^production"],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
     },
     "typecheck": {
       "cache": true,
