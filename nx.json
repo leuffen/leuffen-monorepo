@@ -43,7 +43,7 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"],
-      "outputs": ["{workspaceRoot}/dist/{projectRoot}"]
+      "outputs": ["{projectRoot}/dist"]
     },
     "lint": {
       "cache": true
@@ -51,7 +51,7 @@
     "test": {
       "cache": true,
       "inputs": ["default", "^production"],
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+      "outputs": ["{projectRoot}/coverage"]
     },
     "typecheck": {
       "cache": true,
