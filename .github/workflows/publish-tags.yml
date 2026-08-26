@@ -1,0 +1,48 @@
+name: Publish Tags
+
+on:
+  push:
+    tags:
+      - '*@*.*.*'
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Test, build and publish
+    runs-on: ubuntu-latest
+    environment: npm
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.14.0
+          registry-url: https://registry.npmjs.org/
+          scope: '@leuffen'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Show Nx environment
+        run: npx nx report
+
+      - name: Resolve tagged package
+        id: package
+        shell: bash
+        run: echo "name=${GITHUB_REF_NAME%@*}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify tagged package
+        run: npx nx run-many -p "${{ steps.package.outputs.name }}" -t lint typecheck test build
+
+      - name: Publish tagged package
+        run: npx nx release publish --access public -p "${{ steps.package.outputs.name }}" --provenance
