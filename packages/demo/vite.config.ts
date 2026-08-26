@@ -7,24 +7,24 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     lib: {
-      entry: resolve(import.meta.dirname, 'src/index.ts'),
+      entry: resolve(import.meta.dirname, 'index.ts'),
       fileName: 'index',
       formats: ['es'],
     },
-    outDir: '../../dist/packages/demo',
+    outDir: 'dist',
   },
   plugins: [
     dts({
-      entryRoot: 'src',
+      entryRoot: '.',
       tsconfigPath: resolve(import.meta.dirname, 'tsconfig.lib.json'),
     }),
   ],
   test: {
     coverage: {
       provider: 'v8',
-      reportsDirectory: '../../coverage/packages/demo',
+      reportsDirectory: 'coverage',
     },
     environment: 'node',
-    include: ['src/**/*.spec.ts'],
+    include: ['*.spec.ts'],
   },
 });
