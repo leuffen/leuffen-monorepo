@@ -1,9 +1,9 @@
-export interface PracticeNoticeDisplay {
-  news?: boolean;
+export interface AnnouncementDisplay {
+  list?: boolean;
   dialog?: 'during' | 'never';
 }
 
-export interface PracticeNoticeBase {
+export interface AnnouncementBase {
   id: string;
   startsOn: string;
   endsOn: string;
@@ -11,11 +11,11 @@ export interface PracticeNoticeBase {
   summary?: string;
   content?: string;
   priority?: number;
-  display?: PracticeNoticeDisplay;
+  display?: AnnouncementDisplay;
 }
 
-export interface NewsNotice extends PracticeNoticeBase {
-  type: 'news';
+export interface GeneralAnnouncement extends AnnouncementBase {
+  type: 'announcement';
 }
 
 export interface ReplacementPractice {
@@ -25,18 +25,18 @@ export interface ReplacementPractice {
   note?: string;
 }
 
-export interface VacationNotice extends PracticeNoticeBase {
+export interface VacationAnnouncement extends AnnouncementBase {
   type: 'vacation';
   replacements?: ReplacementPractice[];
 }
 
-export type PracticeNotice = NewsNotice | VacationNotice;
+export type Announcement = GeneralAnnouncement | VacationAnnouncement;
 
-export interface PracticeNoticeData {
+export interface AnnouncementData {
   version: 1;
   locale?: string;
   timeZone?: string;
-  notices: PracticeNotice[];
+  announcements: Announcement[];
 }
 
 export interface LegacyVacation {

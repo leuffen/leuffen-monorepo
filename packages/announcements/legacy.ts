@@ -1,4 +1,4 @@
-import type { LegacyOpenHours, PracticeNoticeData } from './types.js';
+import type { LegacyOpenHours, AnnouncementData } from './types.js';
 
 export interface LegacyAdapterOptions {
   locale?: string;
@@ -8,14 +8,14 @@ export interface LegacyAdapterOptions {
 export function fromLegacyOpenHours(
   input: LegacyOpenHours,
   options: LegacyAdapterOptions = {},
-): PracticeNoticeData {
+): AnnouncementData {
   const vacations = Array.isArray(input.vacation) ? input.vacation : [];
 
   return {
     version: 1,
     locale: options.locale ?? 'de-DE',
     timeZone: options.timeZone ?? 'Europe/Berlin',
-    notices: vacations.map((vacation, index) => ({
+    announcements: vacations.map((vacation, index) => ({
       id: `legacy-vacation-${vacation.from}-${vacation.till}-${index + 1}`,
       type: 'vacation',
       startsOn: vacation.from,
@@ -24,7 +24,7 @@ export function fromLegacyOpenHours(
       summary: vacation.short_text,
       content: vacation.text,
       display: {
-        news: true,
+        list: true,
         dialog: 'during',
       },
     })),

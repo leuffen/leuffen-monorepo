@@ -1,7 +1,7 @@
 {
-  "name": "@leuffen/practice-notices",
+  "name": "@leuffen/announcements",
   "version": "0.1.0",
-  "description": "News and vacation replacement notices for practice websites.",
+  "description": "Time-bound announcements and vacation replacement information for practice websites.",
   "type": "module",
   "sideEffects": [
     "./dist/index.js"
@@ -42,7 +42,7 @@
   "nx": {
     "tags": [
       "type:package",
-      "scope:practice-notices"
+      "scope:announcements"
     ],
     "targets": {
       "build": {

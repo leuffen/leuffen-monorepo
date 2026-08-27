@@ -1,9 +1,9 @@
-# Practice notices
+# Announcements
 
 ## Ziel
 
 Die Komponenten `liweco-news` und `liweco-vacation-modal` aus `@leuffen/liweco-base`
-werden als gemeinsames Paket `@leuffen/practice-notices` übernommen. Das Paket richtet
+werden als gemeinsames Paket `@leuffen/announcements` übernommen. Das Paket richtet
 sich vor allem an Arzt-Websites und zeigt allgemeine Hinweise sowie aktuelle
 Urlaubsvertretungen an.
 
@@ -12,7 +12,7 @@ Urlaubsvertretungen an.
 - versioniertes, serialisierbares Datenformat für Hinweise und Urlaubsvertretungen
 - reine, testbare Zeitraumlogik auf Basis von `Temporal.PlainDate`
 - Legacy-Adapter für das bisherige `window.openhours`-Format
-- `<leuffen-news>` für aktuelle und kommende Meldungen
+- `<leuffen-announcements>` für aktuelle und kommende Meldungen
 - `<leuffen-vacation-modal>` als automatischer Controller für einen programmatischen
   `@nextrap/nte-dialog-component`-Dialog
 - Unit-Tests für Zeitraumlogik, Legacy-Migration und Komponentensteuerung
@@ -26,10 +26,10 @@ Urlaubsvertretungen an.
 
 ## Öffentliche API
 
-- `PracticeNoticeData`, `PracticeNotice`, `VacationNotice`, `ReplacementPractice`
-- `NoticeSchedule`
+- `AnnouncementData`, `Announcement`, `VacationAnnouncement`, `ReplacementPractice`
+- `AnnouncementSchedule`
 - `fromLegacyOpenHours()`
-- `LeuffenNews`, `LeuffenVacationModal`, `LeuffenVacationDialog`
+- `LeuffenAnnouncements`, `LeuffenVacationModal`, `LeuffenVacationDialog`
 
 Beide deklarativen Komponenten akzeptieren Daten über die Property `data`. Alternativ
 kann `source="#id"` auf ein `<script type="application/json">` zeigen. Ohne explizite
@@ -51,14 +51,14 @@ explizit übergeben werden.
 `@nextrap/nte-dialog-component` ist im Nextrap-Monorepo vorhanden, aber zum Zeitpunkt
 dieses Proposals noch nicht öffentlich auf npm veröffentlicht. Der Peer wird daher
 vorübergehend als optional markiert, damit das Leuffen-Monorepo installierbar bleibt.
-Vor der Veröffentlichung von `@leuffen/practice-notices` muss der Nextrap-Peer
+Vor der Veröffentlichung von `@leuffen/announcements` muss der Nextrap-Peer
 veröffentlicht und die optionale Markierung entfernt werden.
 
 ## Akzeptanzkriterien
 
 - bestehende Vacation-Daten lassen sich ohne inhaltlichen Umbau adaptieren
 - Start- und Endtag eines Urlaubs werden korrekt als aktiv erkannt
-- vergangene Meldungen werden nicht als News ausgegeben
+- vergangene Meldungen werden nicht als Announcement ausgegeben
 - ein aktiver Urlaub öffnet genau einmal den programmatischen Dialog
 - Inhalte werden nicht über ungesichertes `innerHTML` aus Metadaten gerendert
 - Lint, Typecheck, Unit-Tests und Build des Monorepos laufen erfolgreich

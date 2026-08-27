@@ -1,9 +1,9 @@
 import { NteDialogComponent } from '@nextrap/nte-dialog-component';
 import { html } from 'lit';
 
-import type { VacationNotice } from './types.js';
+import type { VacationAnnouncement } from './types.js';
 
-export class LeuffenVacationDialog extends NteDialogComponent<VacationNotice, void> {
+export class LeuffenVacationDialog extends NteDialogComponent<VacationAnnouncement, void> {
   protected override dialogOptions = {
     dismiss: {
       closeButton: true,

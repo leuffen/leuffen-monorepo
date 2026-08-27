@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { fromLegacyOpenHours } from './legacy.js';
 
 describe('fromLegacyOpenHours', () => {
-  it('maps existing vacation metadata to versioned notices', () => {
+  it('maps existing vacation metadata to versioned announcements', () => {
     const result = fromLegacyOpenHours({
       vacation: [
         {
@@ -20,7 +20,7 @@ describe('fromLegacyOpenHours', () => {
       version: 1,
       locale: 'de-DE',
       timeZone: 'Europe/Berlin',
-      notices: [
+      announcements: [
         {
           type: 'vacation',
           startsOn: '2026-08-03',
@@ -34,6 +34,6 @@ describe('fromLegacyOpenHours', () => {
   });
 
   it('accepts legacy data without vacations', () => {
-    expect(fromLegacyOpenHours({}).notices).toEqual([]);
+    expect(fromLegacyOpenHours({}).announcements).toEqual([]);
   });
 });

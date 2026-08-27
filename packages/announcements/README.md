@@ -1,13 +1,13 @@
-# @leuffen/practice-notices
+# @leuffen/announcements
 
-News and vacation replacement notices for practice websites. The package contains the
-`<leuffen-news>` and `<leuffen-vacation-modal>` web components plus a DOM-independent
-`NoticeSchedule` API.
+Time-bound announcements and vacation replacement information for practice websites. The package contains the
+`<leuffen-announcements>` and `<leuffen-vacation-modal>` web components plus a DOM-independent
+`AnnouncementSchedule` API.
 
 ## Installation
 
 ```bash
-npm install @leuffen/practice-notices @nextrap/nte-dialog-component
+npm install @leuffen/announcements @nextrap/nte-dialog-component
 ```
 
 `@nextrap/nte-dialog-component` must be available in the consuming registry before this
@@ -20,7 +20,7 @@ package is published.
   "version": 1,
   "locale": "de-DE",
   "timeZone": "Europe/Berlin",
-  "notices": [
+  "announcements": [
     {
       "id": "summer-2026",
       "type": "vacation",
@@ -47,12 +47,12 @@ package is published.
 ## Declarative usage
 
 ```html
-<script type="application/json" id="practice-notices">
-  { "version": 1, "notices": [] }
+<script type="application/json" id="announcements">
+  { "version": 1, "announcements": [] }
 </script>
 
-<leuffen-news source="#practice-notices">Keine aktuellen Hinweise</leuffen-news>
-<leuffen-vacation-modal source="#practice-notices"></leuffen-vacation-modal>
+<leuffen-announcements source="#announcements">Keine aktuellen Hinweise</leuffen-announcements>
+<leuffen-vacation-modal source="#announcements"></leuffen-vacation-modal>
 ```
 
 Applications can set `element.data` directly instead. If neither `data` nor `source` is
@@ -61,9 +61,9 @@ provided, both components adapt the legacy `window.openhours` object.
 ## Programmatic scheduling
 
 ```ts
-import { NoticeSchedule } from '@leuffen/practice-notices';
+import { AnnouncementSchedule } from '@leuffen/announcements';
 
-const schedule = new NoticeSchedule(data);
+const schedule = new AnnouncementSchedule(data);
 const activeVacation = schedule.getActiveVacation('2026-08-10');
 const upcoming = schedule.getUpcoming({ from: '2026-08-01', days: 30 });
 ```
@@ -72,10 +72,10 @@ const upcoming = schedule.getUpcoming({ from: '2026-08-01', days: 30 });
 
 | Old | New |
 |---|---|
-| `<liweco-news>` | `<leuffen-news>` |
+| `<liweco-news>` | `<leuffen-announcements>` |
 | `<liweco-vacation-modal>` | `<leuffen-vacation-modal>` |
-| `window.openhours.vacation[].from` | `notices[].startsOn` |
-| `window.openhours.vacation[].till` | `notices[].endsOn` |
+| `window.openhours.vacation[].from` | `announcements[].startsOn` |
+| `window.openhours.vacation[].till` | `announcements[].endsOn` |
 | `short_text` | `summary` |
 | `text` | `content` |
 

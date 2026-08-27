@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LeuffenNews } from './leuffen-news.js';
+import { LeuffenAnnouncements } from './leuffen-announcements.js';
 import { LeuffenVacationDialog } from './leuffen-vacation-dialog.js';
 import { LeuffenVacationModal } from './leuffen-vacation-modal.js';
-import type { PracticeNoticeData } from './types.js';
+import type { AnnouncementData } from './types.js';
 
-const data: PracticeNoticeData = {
+const data: AnnouncementData = {
   version: 1,
-  notices: [
+  announcements: [
     {
       id: 'vacation',
       type: 'vacation',
@@ -18,26 +18,26 @@ const data: PracticeNoticeData = {
   ],
 };
 
-describe('practice notice components', () => {
+describe('announcement components', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
     vi.restoreAllMocks();
   });
 
-  it('renders upcoming news and retains the authored fallback when empty', () => {
-    const news = new LeuffenNews();
-    news.innerHTML = 'Keine aktuellen Hinweise';
-    news.today = '2026-08-05';
-    news.data = data;
-    document.body.append(news);
+  it('renders upcoming announcements and retains the authored fallback when empty', () => {
+    const announcements = new LeuffenAnnouncements();
+    announcements.innerHTML = 'Keine aktuellen Hinweise';
+    announcements.today = '2026-08-05';
+    announcements.data = data;
+    document.body.append(announcements);
 
-    expect(news.textContent).toContain('Praxisurlaub');
-    expect(news.classList.contains('no-news')).toBe(false);
+    expect(announcements.textContent).toContain('Praxisurlaub');
+    expect(announcements.classList.contains('no-announcements')).toBe(false);
 
-    news.today = '2026-08-15';
-    news.refresh();
-    expect(news.textContent).toBe('Keine aktuellen Hinweise');
-    expect(news.classList.contains('no-news')).toBe(true);
+    announcements.today = '2026-08-15';
+    announcements.refresh();
+    expect(announcements.textContent).toBe('Keine aktuellen Hinweise');
+    expect(announcements.classList.contains('no-announcements')).toBe(true);
   });
 
   it('opens the programmatic vacation dialog once for an active vacation', async () => {
