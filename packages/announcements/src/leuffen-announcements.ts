@@ -1,5 +1,11 @@
-import { resolveAnnouncementData, reportAnnouncementError } from './data-source.js';
-import { AnnouncementSchedule, type AnnouncementDateInput } from './schedule.js';
+import {
+  resolveAnnouncementData,
+  reportAnnouncementError,
+} from './data-source.js';
+import {
+  AnnouncementSchedule,
+  type AnnouncementDateInput,
+} from './schedule.js';
 import type { AnnouncementData } from './types.js';
 
 export class LeuffenAnnouncements extends HTMLElement {

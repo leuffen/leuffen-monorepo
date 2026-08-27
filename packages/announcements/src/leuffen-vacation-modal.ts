@@ -1,6 +1,12 @@
-import { resolveAnnouncementData, reportAnnouncementError } from './data-source.js';
+import {
+  resolveAnnouncementData,
+  reportAnnouncementError,
+} from './data-source.js';
 import { LeuffenVacationDialog } from './leuffen-vacation-dialog.js';
-import { AnnouncementSchedule, type AnnouncementDateInput } from './schedule.js';
+import {
+  AnnouncementSchedule,
+  type AnnouncementDateInput,
+} from './schedule.js';
 import type { AnnouncementData } from './types.js';
 
 export class LeuffenVacationModal extends HTMLElement {

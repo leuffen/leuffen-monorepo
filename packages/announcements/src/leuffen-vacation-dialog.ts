@@ -3,7 +3,10 @@ import { html } from 'lit';
 
 import type { VacationAnnouncement } from './types.js';
 
-export class LeuffenVacationDialog extends NteDialogComponent<VacationAnnouncement, void> {
+export class LeuffenVacationDialog extends NteDialogComponent<
+  VacationAnnouncement,
+  void
+> {
   protected override dialogOptions = {
     dismiss: {
       closeButton: true,
@@ -21,7 +24,12 @@ export class LeuffenVacationDialog extends NteDialogComponent<VacationAnnounceme
     return html`
       ${body
         ? html`<p>
-            ${body.split('\n').map((line, index) => html`${index > 0 ? html`<br />` : null}${line}`)}
+            ${body
+              .split('\n')
+              .map(
+                (line, index) =>
+                  html`${index > 0 ? html`<br />` : null}${line}`,
+              )}
           </p>`
         : null}
       ${this.input.replacements?.length
@@ -33,9 +41,17 @@ export class LeuffenVacationDialog extends NteDialogComponent<VacationAnnounceme
                   (replacement) => html`
                     <li>
                       <strong>${replacement.name}</strong>
-                      ${replacement.phone ? html`<br /><a href=${`tel:${replacement.phone}`}>${replacement.phone}</a>` : null}
-                      ${replacement.url ? html`<br /><a href=${replacement.url}>Website</a>` : null}
-                      ${replacement.note ? html`<br />${replacement.note}` : null}
+                      ${replacement.phone
+                        ? html`<br /><a href=${`tel:${replacement.phone}`}
+                              >${replacement.phone}</a
+                            >`
+                        : null}
+                      ${replacement.url
+                        ? html`<br /><a href=${replacement.url}>Website</a>`
+                        : null}
+                      ${replacement.note
+                        ? html`<br />${replacement.note}`
+                        : null}
                     </li>
                   `,
                 )}
@@ -47,7 +63,13 @@ export class LeuffenVacationDialog extends NteDialogComponent<VacationAnnounceme
   }
 
   protected override renderFooter() {
-    return html`<button type="button" class="btn btn-secondary" @click=${() => this.abort()}>Schließen</button>`;
+    return html`<button
+      type="button"
+      class="btn btn-secondary"
+      @click=${() => this.abort()}
+    >
+      Schließen
+    </button>`;
   }
 }
 

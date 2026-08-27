@@ -12,11 +12,16 @@ declare module '@nextrap/nte-dialog-component' {
         };
   }
 
-  export abstract class NteDialogComponent<TInput = void, TResult = void> extends HTMLElement {
+  export abstract class NteDialogComponent<
+    TInput = void,
+    TResult = void,
+  > extends HTMLElement {
     protected input: TInput;
     protected readonly resultType?: TResult;
     protected dialogOptions: NteDialogComponentOptions;
-    static show<T>(input: T): Promise<{ submitted: true; data: void } | { submitted: false }>;
+    static show<T>(
+      input: T,
+    ): Promise<{ submitted: true; data: void } | { submitted: false }>;
     protected abort(): void;
     protected renderTitle(): TemplateResult | string | null;
     protected abstract renderDialog(): TemplateResult;

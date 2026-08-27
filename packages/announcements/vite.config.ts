@@ -24,13 +24,16 @@ export default defineConfig({
   ],
   test: {
     alias: {
-      '@nextrap/nte-dialog-component': resolve(import.meta.dirname, 'test/nte-dialog-component.stub.ts'),
+      '@nextrap/nte-dialog-component': resolve(
+        import.meta.dirname,
+        'test/nte-dialog-component.stub.ts',
+      ),
     },
     coverage: {
       provider: 'v8',
       reportsDirectory: 'coverage',
     },
     environment: 'happy-dom',
-    include: ['*.spec.ts'],
+    include: ['src/**/*.spec.ts'],
   },
 });

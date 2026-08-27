@@ -19,7 +19,8 @@
   "files": [
     "dist",
     "README.md",
-    ".ai-usage-info.md"
+    ".ai-usage-info.md",
+    ".agents/skills"
   ],
   "dependencies": {
     "lit": "^3.3.3",

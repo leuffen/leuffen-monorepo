@@ -17,7 +17,9 @@ export function resolveAnnouncementData(
   if (source) {
     const script = document.querySelector(source);
     if (!(script instanceof HTMLScriptElement)) {
-      throw new TypeError(`Announcement source ${source} must select a script element`);
+      throw new TypeError(
+        `Announcement source ${source} must select a script element`,
+      );
     }
     return JSON.parse(script.textContent ?? '') as AnnouncementData;
   }
@@ -25,7 +27,10 @@ export function resolveAnnouncementData(
   return window.openhours ? fromLegacyOpenHours(window.openhours) : null;
 }
 
-export function reportAnnouncementError(host: HTMLElement, error: unknown): void {
+export function reportAnnouncementError(
+  host: HTMLElement,
+  error: unknown,
+): void {
   host.dispatchEvent(
     new CustomEvent('leuffen-announcements-error', {
       bubbles: true,

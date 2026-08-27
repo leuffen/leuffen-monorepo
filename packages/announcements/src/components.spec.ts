@@ -41,7 +41,9 @@ describe('announcement components', () => {
   });
 
   it('opens the programmatic vacation dialog once for an active vacation', async () => {
-    const show = vi.spyOn(LeuffenVacationDialog, 'show').mockResolvedValue({ submitted: false });
+    const show = vi
+      .spyOn(LeuffenVacationDialog, 'show')
+      .mockResolvedValue({ submitted: false });
     const modal = new LeuffenVacationModal();
     modal.today = '2026-08-05';
     modal.data = data;
@@ -51,11 +53,15 @@ describe('announcement components', () => {
     await modal.refresh();
 
     expect(show).toHaveBeenCalledTimes(1);
-    expect(show).toHaveBeenCalledWith(expect.objectContaining({ id: 'vacation' }));
+    expect(show).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'vacation' }),
+    );
   });
 
   it('does not open the dialog outside the vacation period', async () => {
-    const show = vi.spyOn(LeuffenVacationDialog, 'show').mockResolvedValue({ submitted: false });
+    const show = vi
+      .spyOn(LeuffenVacationDialog, 'show')
+      .mockResolvedValue({ submitted: false });
     const modal = new LeuffenVacationModal();
     modal.today = '2026-08-15';
     modal.data = data;

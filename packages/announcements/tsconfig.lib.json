@@ -9,6 +9,11 @@
     "rootDir": ".",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
   },
-  "exclude": ["*.spec.ts", "test/**/*.ts", "vite.config.ts"],
-  "include": ["*.ts", "*.d.ts"]
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "test/**/*.ts",
+    "vite.config.ts"
+  ],
+  "include": ["index.ts", "src/**/*.ts", "src/**/*.d.ts"]
 }
