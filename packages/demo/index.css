@@ -1,0 +1,3 @@
+.leuffen-demo {
+  color: var(--leuffen-demo-color, currentColor);
+}
