@@ -1,0 +1,71 @@
+{
+  "name": "@leuffen/announcements",
+  "version": "0.1.0",
+  "description": "Time-bound announcements and vacation replacement information for practice websites.",
+  "type": "module",
+  "sideEffects": [
+    "./dist/index.js"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    ".ai-usage-info.md",
+    ".agents/skills"
+  ],
+  "dependencies": {
+    "lit": "^3.3.3"
+  },
+  "peerDependencies": {
+    "@nextrap/nte-dialog-component": "^2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@nextrap/nte-dialog-component": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "happy-dom": "^20.11.12"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "nx": {
+    "tags": [
+      "type:package",
+      "scope:announcements"
+    ],
+    "targets": {
+      "build": {
+        "inputs": [
+          "{projectRoot}/**/*",
+          "!{projectRoot}/**/*.spec.ts",
+          "!{projectRoot}/coverage/**/*",
+          "!{projectRoot}/dist/**/*"
+        ]
+      },
+      "test": {
+        "inputs": [
+          "{projectRoot}/**/*",
+          "!{projectRoot}/coverage/**/*",
+          "!{projectRoot}/dist/**/*"
+        ]
+      },
+      "typecheck": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "tsc -p {projectRoot}/tsconfig.lib.json --noEmit"
+        }
+      }
+    }
+  }
+}
