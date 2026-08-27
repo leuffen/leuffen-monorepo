@@ -1,65 +1,34 @@
 import { NteDialogComponent } from '@nextrap/nte-dialog-component';
 import { html } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-import type { VacationAnnouncement } from './types.js';
+import { markdownToHtml } from './functions.js';
+
+export interface VacationDialogInput {
+  title: string;
+  text: string;
+  classes?: string;
+}
 
 export class LeuffenVacationDialog extends NteDialogComponent<
-  VacationAnnouncement,
+  VacationDialogInput,
   void
 > {
   protected override dialogOptions = {
     dismiss: {
       closeButton: true,
-      escape: true,
-      backdrop: 'shake' as const,
+      escape: false,
+      backdrop: 'close' as const,
     },
   };
 
   protected override renderTitle() {
-    return this.input.title;
+    return html`${unsafeHTML(markdownToHtml(this.input.title))}`;
   }
 
   protected override renderDialog() {
-    const body = this.input.content ?? this.input.summary ?? '';
-    return html`
-      ${body
-        ? html`<p>
-            ${body
-              .split('\n')
-              .map(
-                (line, index) =>
-                  html`${index > 0 ? html`<br />` : null}${line}`,
-              )}
-          </p>`
-        : null}
-      ${this.input.replacements?.length
-        ? html`
-            <section aria-label="Urlaubsvertretung">
-              <h3>Vertretung</h3>
-              <ul>
-                ${this.input.replacements.map(
-                  (replacement) => html`
-                    <li>
-                      <strong>${replacement.name}</strong>
-                      ${replacement.phone
-                        ? html`<br /><a href=${`tel:${replacement.phone}`}
-                              >${replacement.phone}</a
-                            >`
-                        : null}
-                      ${replacement.url
-                        ? html`<br /><a href=${replacement.url}>Website</a>`
-                        : null}
-                      ${replacement.note
-                        ? html`<br />${replacement.note}`
-                        : null}
-                    </li>
-                  `,
-                )}
-              </ul>
-            </section>
-          `
-        : null}
-    `;
+    const body = this.input.text.replace(/\n/g, '<br>');
+    return html`${unsafeHTML(markdownToHtml(body))}`;
   }
 
   protected override renderFooter() {

@@ -1,47 +1,45 @@
 ---
 name: announcements-implementation
-description: Implement or extend @leuffen/announcements, including its data model, calendar scheduling, web components, vacation dialog, and legacy migration. Use for code changes to this package, not for writing announcement content.
+description: Implement or extend @leuffen/announcements while preserving the liweco-base OfficeHours, window.openhours, announcement list, and vacation modal behavior. Use for code changes to this package, not for writing announcement content.
 ---
 
 # Announcements implementation
 
-Keep changes to `@leuffen/announcements` compatible with practice websites and
-with the existing `window.openhours` migration path.
+Keep `@leuffen/announcements` behavior compatible with the original
+`@leuffen/liweco-base` components. The renamed elements and the programmatic
+Nextrap dialog are the intended differences.
 
 ## Package structure
 
-- Keep `index.ts` in the package root as the public entrypoint. It should only
-  re-export public APIs from `src/`.
-- Put implementation files, declarations, and their colocated unit tests in
-  `src/`.
+- Keep `index.ts` in the package root as an export-only public entrypoint.
+- Put implementation files, declarations, and colocated tests in `src/`.
 - Keep test-only replacements for external packages in `test/`.
-- Update `.ai-usage-info.md` and `README.md` when a public API or usage pattern
-  changes. Prefer concrete examples in `.ai-usage-info.md`.
+- Update `.ai-usage-info.md` and `README.md` when public behavior changes.
 
-## Implementation rules
+## Compatibility rules
 
-- Treat `startsOn` and `endsOn` as inclusive ISO calendar dates. Use
-  `Temporal.PlainDate` through `AnnouncementSchedule`; do not introduce timestamp
-  or local-midnight comparisons.
-- Keep date selection and ordering in the DOM-independent schedule class. Web
-  components should resolve data, call the schedule, and render the result.
-- Preserve `AnnouncementData.version === 1` unless a versioned migration is part
-  of the request.
-- Keep `<leuffen-announcements>` safe for authored fallback markup. Render data
-  values as text and retain the `data-owner` styling hooks.
-- Open vacations through `LeuffenVacationDialog.show()`, which uses the
-  programmatic Nextrap dialog component. Do not replace it with inline modal
-  markup.
-- Preserve the automatic `window.openhours` fallback for existing websites.
-  New integrations should prefer the `data` property or a JSON script selected
-  through `source`.
+- Read `window.openhours` directly. Do not introduce another component data
+  property, source selector, or data schema unless the user explicitly requests
+  a separate follow-up migration.
+- Preserve `OfficeHours` date behavior: use `new Date(value)`, set `till` to local
+  23:59:59.999, treat `null` as now, and retain the original interval overlap
+  checks.
+- Keep `OfficeHours` responsible for loading opening hours and vacations. The web
+  components should call it rather than duplicate date comparisons.
+- Preserve the DOM-ready wait and 100 ms startup delay used by the old
+  components.
+- Keep the original small Markdown conversion for vacation titles and body text.
+- `<leuffen-announcements>` replaces `<liweco-news>` but retains its upcoming
+  vacation and authored-fallback behavior.
+- `<leuffen-vacation-modal>` must open an active vacation through
+  `LeuffenVacationDialog.show()`. Do not reintroduce inline modal markup.
 
 ## Verification
 
-Add or update focused tests for the behavior being changed. Date changes should
-cover inclusive boundaries and relevant calendar edge cases. Dialog changes
-should verify that one active vacation is opened only once. Run package lint,
-typecheck, unit tests, and build before handing off.
+Compare business-logic changes against `@leuffen/liweco-base` before altering
+behavior. Cover inclusive vacation end dates, current and future filtering,
+interval overlaps, authored fallback content, and active modal opening. Run
+package lint, typecheck, unit tests, and build before handing off.
 
-Read `.ai-usage-info.md` for supported integration examples and `README.md` for
-the current public data format.
+Read `.ai-usage-info.md` for integration examples and `README.md` for the public
+API and unchanged `window.openhours` fields.

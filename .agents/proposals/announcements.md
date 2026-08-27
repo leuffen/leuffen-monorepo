@@ -2,63 +2,62 @@
 
 ## Ziel
 
-Die Komponenten `liweco-news` und `liweco-vacation-modal` aus `@leuffen/liweco-base`
-werden als gemeinsames Paket `@leuffen/announcements` übernommen. Das Paket richtet
-sich vor allem an Arzt-Websites und zeigt allgemeine Hinweise sowie aktuelle
-Urlaubsvertretungen an.
+Die Komponenten `liweco-news` und `liweco-vacation-modal` aus
+`@leuffen/liweco-base` werden als gemeinsames Paket `@leuffen/announcements`
+übernommen. Datenquelle und Business-Logik bleiben kompatibel zum alten Paket.
 
 ## Scope
 
-- versioniertes, serialisierbares Datenformat für Hinweise und Urlaubsvertretungen
-- reine, testbare Zeitraumlogik auf Basis von `Temporal.PlainDate`
-- Legacy-Adapter für das bisherige `window.openhours`-Format
-- `<leuffen-announcements>` für aktuelle und kommende Meldungen
-- `<leuffen-vacation-modal>` als automatischer Controller für einen programmatischen
-  `@nextrap/nte-dialog-component`-Dialog
-- Unit-Tests für Zeitraumlogik, Legacy-Migration und Komponentensteuerung
+- unveränderte `window.openhours`-Datenstruktur
+- übernommene `OfficeHours`-Logik auf Basis von JavaScript `Date`
+- `<leuffen-announcements>` als umbenannte Variante von `<liweco-news>`
+- `<leuffen-vacation-modal>` als automatischer Controller für einen
+  programmatischen `@nextrap/nte-dialog-component`-Dialog
+- übernommene Markdown-Konvertierung für Titel und Urlaubstext
+- Unit-Tests für Zeitraumlogik und Komponentensteuerung
 
-## Non-Goals
+## Bewusste Abweichungen vom alten Paket
 
-- Öffnungszeitenberechnung aus der bisherigen `OfficeHours`-Klasse
-- JSON-LD-Generierung oder Google-Business-Profile-Synchronisation
-- ein eigenes visuelles Theme
-- Netzwerkabruf der Daten innerhalb der Komponenten
+- Die Custom-Element-Namen verwenden `leuffen` und `announcements`.
+- Das Vacation Modal erzeugt kein eigenes Bootstrap-Modal-Markup, sondern öffnet
+  die programmatische Nextrap-Dialogkomponente.
+- Styling-Hooks verwenden die neuen Komponentennamen.
 
 ## Öffentliche API
 
-- `AnnouncementData`, `Announcement`, `VacationAnnouncement`, `ReplacementPractice`
-- `AnnouncementSchedule`
-- `fromLegacyOpenHours()`
+- `LeuOpenHours`, `LeuOpenHour`, `LeuVacation`
+- `OfficeHours`, `OpenHour`, `Vacation`, `TimeInterval`
 - `LeuffenAnnouncements`, `LeuffenVacationModal`, `LeuffenVacationDialog`
 
-Beide deklarativen Komponenten akzeptieren Daten über die Property `data`. Alternativ
-kann `source="#id"` auf ein `<script type="application/json">` zeigen. Ohne explizite
-Quelle wird aus Gründen der Rückwärtskompatibilität `window.openhours` gelesen.
+Beide deklarativen Komponenten lesen ausschließlich `window.openhours`. Die
+Felder `from`, `till`, `title`, `short_text` und `text` werden nicht umbenannt.
 
-## Daten und Datumssemantik
+## Datumsverhalten
 
-Datumswerte werden öffentlich als ISO-Strings `YYYY-MM-DD` gespeichert. Intern werden
-sie als `Temporal.PlainDate` verglichen. `startsOn` und `endsOn` sind inklusive.
-"Heute" wird anhand der konfigurierten IANA-Zeitzone ermittelt und kann für Tests
-explizit übergeben werden.
+Das Verhalten entspricht `@leuffen/liweco-base`:
+
+- Strings werden mit `new Date(value)` konvertiert.
+- Das Ende eines Urlaubs wird auf lokale 23:59:59.999 gesetzt.
+- `null` verwendet das aktuelle Datum.
+- `getUpcomingVacation(null)` liefert alle noch nicht beendeten Urlaube.
+- Begrenzte Intervalle verwenden die drei bisherigen Überlappungsprüfungen.
 
 ## Abhängigkeiten
 
-- `temporal-polyfill`, bis Temporal in allen Zielbrowsern verfügbar ist
 - `lit`
 - `@nextrap/nte-dialog-component` als Peer Dependency
 
-`@nextrap/nte-dialog-component` ist im Nextrap-Monorepo vorhanden, aber zum Zeitpunkt
-dieses Proposals noch nicht öffentlich auf npm veröffentlicht. Der Peer wird daher
-vorübergehend als optional markiert, damit das Leuffen-Monorepo installierbar bleibt.
-Vor der Veröffentlichung von `@leuffen/announcements` muss der Nextrap-Peer
-veröffentlicht und die optionale Markierung entfernt werden.
+`@nextrap/nte-dialog-component` ist im Nextrap-Monorepo vorhanden, aber zum
+Zeitpunkt dieses Proposals noch nicht öffentlich auf npm veröffentlicht. Der Peer
+wird daher vorübergehend als optional markiert. Vor der Veröffentlichung von
+`@leuffen/announcements` muss der Peer veröffentlicht und die optionale Markierung
+entfernt werden.
 
 ## Akzeptanzkriterien
 
-- bestehende Vacation-Daten lassen sich ohne inhaltlichen Umbau adaptieren
-- Start- und Endtag eines Urlaubs werden korrekt als aktiv erkannt
-- vergangene Meldungen werden nicht als Announcement ausgegeben
-- ein aktiver Urlaub öffnet genau einmal den programmatischen Dialog
-- Inhalte werden nicht über ungesichertes `innerHTML` aus Metadaten gerendert
-- Lint, Typecheck, Unit-Tests und Build des Monorepos laufen erfolgreich
+- bestehende `window.openhours`-Daten funktionieren ohne Migration
+- Start- und Endtag eines Urlaubs werden wie im alten Paket erkannt
+- vergangene Urlaube werden nicht als Announcement ausgegeben
+- ein aktiver Urlaub öffnet den programmatischen Dialog
+- Markdown in Titel und Text wird wie bisher umgewandelt
+- Lint, Typecheck, Unit-Tests und Build des Pakets laufen erfolgreich

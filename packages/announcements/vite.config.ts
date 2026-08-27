@@ -13,7 +13,7 @@ export default defineConfig({
     },
     outDir: 'dist',
     rollupOptions: {
-      external: ['@nextrap/nte-dialog-component', 'lit', 'temporal-polyfill'],
+      external: ['@nextrap/nte-dialog-component', 'lit', /^lit\//],
     },
   },
   plugins: [

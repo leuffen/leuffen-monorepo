@@ -1,53 +1,28 @@
-export interface AnnouncementDisplay {
-  list?: boolean;
-  dialog?: 'during' | 'never';
+export interface LeuOpenHour {
+  dayOfWeek: string | number;
+  from: string | number;
+  to: string | number;
+  status: string;
 }
 
-export interface AnnouncementBase {
-  id: string;
-  startsOn: string;
-  endsOn: string;
-  title: string;
-  summary?: string;
-  content?: string;
-  priority?: number;
-  display?: AnnouncementDisplay;
-}
-
-export interface GeneralAnnouncement extends AnnouncementBase {
-  type: 'announcement';
-}
-
-export interface ReplacementPractice {
-  name: string;
-  phone?: string;
-  url?: string;
-  note?: string;
-}
-
-export interface VacationAnnouncement extends AnnouncementBase {
-  type: 'vacation';
-  replacements?: ReplacementPractice[];
-}
-
-export type Announcement = GeneralAnnouncement | VacationAnnouncement;
-
-export interface AnnouncementData {
-  version: 1;
-  locale?: string;
-  timeZone?: string;
-  announcements: Announcement[];
-}
-
-export interface LegacyVacation {
+export interface LeuVacation {
   from: string;
   till: string;
   title: string;
-  text?: string;
+  text: string;
   short_text?: string;
 }
 
-export interface LegacyOpenHours {
-  vacation?: LegacyVacation[];
-  [key: string]: unknown;
+export class LeuOpenHours {
+  public _editor!: string;
+  public table!: Array<{ day: string; time: string }>;
+  public _status_values!: string[];
+  public json!: LeuOpenHour[];
+  public vacation!: LeuVacation[];
+}
+
+declare global {
+  interface Window {
+    openhours?: LeuOpenHours;
+  }
 }

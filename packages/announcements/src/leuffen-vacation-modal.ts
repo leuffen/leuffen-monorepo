@@ -1,47 +1,32 @@
-import {
-  resolveAnnouncementData,
-  reportAnnouncementError,
-} from './data-source.js';
+import { domReady, sleep } from './functions.js';
 import { LeuffenVacationDialog } from './leuffen-vacation-dialog.js';
-import {
-  AnnouncementSchedule,
-  type AnnouncementDateInput,
-} from './schedule.js';
-import type { AnnouncementData } from './types.js';
+import { OfficeHours } from './office-hours.js';
 
 export class LeuffenVacationModal extends HTMLElement {
-  private explicitData?: AnnouncementData;
-  private openedAnnouncementId?: string;
+  async connectedCallback(): Promise<void> {
+    this.style.display = 'none';
+    await domReady();
+    await sleep(100);
 
-  today?: AnnouncementDateInput;
+    if (window.openhours === undefined) {
+      console.error('[leuffen-vacation-modal] window.openhours not defined');
+      return;
+    }
+    if (!Array.isArray(window.openhours.vacation)) {
+      console.error(
+        '[leuffen-vacation-modal] window.openhours.vacation is not a array',
+      );
+      return;
+    }
 
-  get data(): AnnouncementData | undefined {
-    return this.explicitData;
-  }
+    const openhours = new OfficeHours();
+    openhours.loadStruct(window.openhours);
+    console.log('[leuffen-vacation-modal] openhours loaded', openhours);
 
-  set data(value: AnnouncementData | undefined) {
-    this.explicitData = value;
-    if (this.isConnected) void this.refresh();
-  }
-
-  connectedCallback(): void {
-    this.hidden = true;
-    void this.refresh();
-  }
-
-  async refresh(): Promise<void> {
-    try {
-      const data = resolveAnnouncementData(this, this.explicitData);
-      if (!data) return;
-
-      const schedule = new AnnouncementSchedule(data);
-      const vacation = schedule.getActiveVacation(this.today);
-      if (!vacation || vacation.id === this.openedAnnouncementId) return;
-
-      this.openedAnnouncementId = vacation.id;
-      await LeuffenVacationDialog.show(vacation);
-    } catch (error) {
-      reportAnnouncementError(this, error);
+    if (openhours.isVacation(null)) {
+      console.log('[leuffen-vacation-modal] showing vacation modal');
+      const vacation = openhours.getVacation(null);
+      if (vacation !== null) await LeuffenVacationDialog.show(vacation);
     }
   }
 }
