@@ -18,7 +18,7 @@ export class LeuffenVacationDialog extends NteDialogComponent<
     dismiss: {
       closeButton: true,
       escape: false,
-      backdrop: 'close' as const,
+      backdrop: 'shake' as const,
     },
   };
 
@@ -28,7 +28,7 @@ export class LeuffenVacationDialog extends NteDialogComponent<
 
   protected override renderDialog() {
     const body = this.input.text.replace(/\n/g, '<br>');
-    return html`${unsafeHTML(markdownToHtml(body))}`;
+    return html`<div class="p-3">${unsafeHTML(markdownToHtml(body))}</div>`;
   }
 
   protected override renderFooter() {

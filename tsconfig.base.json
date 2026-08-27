@@ -12,7 +12,11 @@
     "rootDir": ".",
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2022"
+    "target": "ES2022",
+    "paths": {
+      "@leuffen/announcements": ["packages/announcements/index.ts"],
+      "@leuffen/demo": ["packages/demo/index.ts"]
+    }
   },
   "exclude": ["node_modules", "dist", "tmp"]
 }
