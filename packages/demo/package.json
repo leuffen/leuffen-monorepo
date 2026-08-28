@@ -6,32 +6,23 @@
   "sideEffects": [
     "./index.css"
   ],
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./index.js",
+  "module": "./index.js",
+  "types": "./index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./index.d.ts",
+      "import": "./index.js"
     },
     "./index.css": "./index.css",
     "./package.json": "./package.json"
   },
   "files": [
-    "dist",
-    "index.css",
-    "README.md"
+    "*.*",
+    "src",
+    "skills"
   ],
-  "dependencies": {
-    "tslib": "^2.8.1"
-  },
   "publishConfig": {
     "access": "public"
-  },
-  "nx": {
-    "tags": [
-      "type:package",
-      "scope:demo"
-    ]
   }
 }

@@ -1,22 +1,35 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": ".",
-    "declaration": false,
-    "forceConsistentCasingInFileNames": true,
-    "importHelpers": true,
-    "lib": ["ES2022", "DOM"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noEmit": true,
     "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "importHelpers": true,
+    "target": "es2022",
+    "module": "esnext",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
-    "strict": true,
-    "target": "ES2022",
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
     "paths": {
-      "@leuffen/announcements": ["packages/announcements/index.ts"],
-      "@leuffen/demo": ["packages/demo/index.ts"]
+      "@leuffen/announcements": [
+        "packages/announcements/index.ts"
+      ],
+      "@leuffen/demo": [
+        "packages/demo/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "dist", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

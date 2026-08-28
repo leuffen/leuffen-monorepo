@@ -7,6 +7,20 @@
   },
   "plugins": [
     {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "devTargetName": "dev",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static",
+        "typecheckTargetName": "typecheck",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
+      }
+    },
+    {
       "plugin": "@nx/eslint/plugin",
       "options": {
         "targetName": "lint"
@@ -16,50 +30,33 @@
       "plugin": "@nx/js/typescript",
       "options": {
         "typecheck": {
-          "targetName": "typecheck"
+          "targetName": "tsc:typecheck"
         },
         "build": {
-          "targetName": "tsc:build",
+          "targetName": "build",
           "configName": "tsconfig.lib.json",
-          "buildDepsName": "tsc:build-deps",
-          "watchDepsName": "tsc:watch-deps"
+          "buildDepsName": "build-deps",
+          "watchDepsName": "watch-deps"
         }
-      }
-    },
-    {
-      "plugin": "@nx/vite/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "testTargetName": "test",
-        "serveTargetName": "serve",
-        "devTargetName": "dev",
-        "previewTargetName": "preview",
-        "typecheckTargetName": "vite:typecheck"
       }
     }
   ],
   "targetDefaults": {
-    "build": {
+    "@nx/js:tsc": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"],
-      "outputs": ["{projectRoot}/dist"]
-    },
-    "lint": {
-      "cache": true
-    },
-    "test": {
-      "cache": true,
-      "inputs": ["default", "^production"],
-      "outputs": ["{projectRoot}/coverage"]
-    },
-    "typecheck": {
-      "cache": true,
-      "dependsOn": ["^typecheck"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "default",
+        "^default"
+      ]
     }
   },
   "release": {
-    "projects": ["packages/*"],
+    "projects": [
+      "packages/*"
+    ],
     "projectsRelationship": "independent",
     "changelog": {
       "automaticFromRef": true,
@@ -68,6 +65,11 @@
     "version": {
       "preVersionCommand": "npx nx run-many -t build",
       "updateDependents": "never"
+    }
+  },
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
     }
   }
 }

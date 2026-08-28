@@ -2,24 +2,31 @@
   "name": "@leuffen/announcements",
   "version": "0.1.0",
   "description": "Time-bound announcements and vacation replacement information for practice websites.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leuffen/leuffen-monorepo.git",
+    "directory": "packages/announcements"
+  },
   "type": "module",
   "sideEffects": [
-    "./dist/index.js"
+    "./index.js"
   ],
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./index.js",
+  "module": "./index.js",
+  "types": "./index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./index.d.ts",
+      "import": "./index.js"
     },
     "./package.json": "./package.json"
   },
   "files": [
-    "dist",
-    "README.md",
+    "*.*",
+    "src",
+    "test",
     ".ai-usage-info.md",
+    "skills",
     ".agents/skills"
   ],
   "dependencies": {
@@ -38,34 +45,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "nx": {
-    "tags": [
-      "type:package",
-      "scope:announcements"
-    ],
-    "targets": {
-      "build": {
-        "inputs": [
-          "{projectRoot}/**/*",
-          "!{projectRoot}/**/*.spec.ts",
-          "!{projectRoot}/coverage/**/*",
-          "!{projectRoot}/dist/**/*"
-        ]
-      },
-      "test": {
-        "inputs": [
-          "{projectRoot}/**/*",
-          "!{projectRoot}/coverage/**/*",
-          "!{projectRoot}/dist/**/*"
-        ]
-      },
-      "typecheck": {
-        "executor": "nx:run-commands",
-        "options": {
-          "command": "tsc -p {projectRoot}/tsconfig.lib.json --noEmit"
-        }
-      }
-    }
   }
 }

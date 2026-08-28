@@ -21,7 +21,7 @@ export class LeuffenAnnouncements extends HTMLElement {
     this.innerHTML = '';
 
     const announcements = document.createElement('div');
-    announcements.dataset.owner = 'leuffen-announcements';
+    announcements.dataset['owner'] = 'leuffen-announcements';
     if (dataClass !== null) announcements.className = dataClass;
     this.append(announcements);
 
@@ -29,7 +29,7 @@ export class LeuffenAnnouncements extends HTMLElement {
     for (const vacation of openhours.getUpcomingVacation(null)) {
       messageCount++;
       const paragraph = document.createElement('p');
-      paragraph.dataset.owner = 'leuffen-announcement';
+      paragraph.dataset['owner'] = 'leuffen-announcement';
       paragraph.innerHTML = markdownToHtml(vacation.title);
       announcements.append(paragraph);
     }
