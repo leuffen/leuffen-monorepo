@@ -131,12 +131,13 @@ npm trust github @leuffen/announcements \
 - `@leuffen/announcements@0.2.1` patch release commit/tag was created locally on 2026-08-28 with `npx nx release patch --skip-publish -p @leuffen/announcements`; push with tags to trigger publishing.
 - Trusted publishing for `@leuffen/announcements` was configured on 2026-08-28:
   - type: `github`
-  - id: `7c11ff5b-722b-481f-9a2e-bc739e395b2b`
+  - id: `8cdc1624-046f-41ef-8ab4-c2989faf2f7e`
   - repository: `leuffen/leuffen-monorepo`
-  - workflow file: `publish.yml` (verify with `npm trust list`; previous cache may have referred to `publish-tags.yml`)
+  - workflow file: `publish.yml`
   - permissions: `publish`
 - After publish/trust setup, `npm dist-tag ls @leuffen/announcements` returned `latest: 0.1.0` and `npm access get status` returned `public`; `npm view @leuffen/announcements` currently shows only `0.1.0` published.
-- Publish workflow run `33169502671` for tag `@leuffen/announcements@0.2.1` triggered correctly but failed at `npx nx release publish --access public -p @leuffen/announcements --provenance`; local dry-run of the same Nx publish target succeeds, so verify npm trusted publishing/auth for `.github/workflows/publish.yml`.
+- Publish workflow run `33169502671` for tag `@leuffen/announcements@0.2.1` triggered correctly but failed at `npx nx release publish --access public -p @leuffen/announcements --provenance`; local dry-run of the same Nx publish target succeeds.
+- npm trusted publishing was corrected on 2026-08-28: revoked old trust for `publish-tags.yml` and created trust id `8cdc1624-046f-41ef-8ab4-c2989faf2f7e` for `.github/workflows/publish.yml`.
 - `packages/announcements/package.json` should include repository metadata:
   - `type`: `git`
   - `url`: `git+https://github.com/leuffen/leuffen-monorepo.git`
