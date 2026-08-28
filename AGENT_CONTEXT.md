@@ -44,7 +44,7 @@ Last verified: 2026-08-28
 
 | Package | Path | Version | Publish notes |
 | --- | --- | --- | --- |
-| `@leuffen/announcements` | `packages/announcements` | `0.2.1` | public package; patch release tag `@leuffen/announcements@0.2.1` created locally on 2026-08-28; first npm publish completed and trusted publishing configured on 2026-08-28 |
+| `@leuffen/announcements` | `packages/announcements` | `1.0.0` | public package; major release tag `@leuffen/announcements@1.0.0` created locally on 2026-08-28; trusted publishing configured for `publish.yml` |
 | `@leuffen/demo` | `packages/demo` | `0.0.0` | public package metadata; reference/demo package |
 
 Last verified: 2026-08-28
@@ -128,14 +128,15 @@ npm trust github @leuffen/announcements \
 - `@leuffen/announcements` first manual publish was completed on 2026-08-28.
 - `@leuffen/announcements@0.1.1` patch release commit/tag was created locally on 2026-08-28 with `npx nx release patch --skip-publish -p @leuffen/announcements`.
 - `@leuffen/announcements@0.2.0` minor release commit/tag was created locally on 2026-08-28 with `npx nx release minor --skip-publish -p @leuffen/announcements`.
-- `@leuffen/announcements@0.2.1` patch release commit/tag was created locally on 2026-08-28 with `npx nx release patch --skip-publish -p @leuffen/announcements`; push with tags to trigger publishing.
+- `@leuffen/announcements@0.2.1` patch release commit/tag was created locally on 2026-08-28 with `npx nx release patch --skip-publish -p @leuffen/announcements` and was published successfully.
+- `@leuffen/announcements@1.0.0` major release commit/tag was created locally on 2026-08-28 with `npx nx release major --skip-publish -p @leuffen/announcements`; push with tags to trigger publishing.
 - Trusted publishing for `@leuffen/announcements` was configured on 2026-08-28:
   - type: `github`
   - id: `8cdc1624-046f-41ef-8ab4-c2989faf2f7e`
   - repository: `leuffen/leuffen-monorepo`
   - workflow file: `publish.yml`
   - permissions: `publish`
-- After publish/trust setup, `npm dist-tag ls @leuffen/announcements` returned `latest: 0.1.0` and `npm access get status` returned `public`; `npm view @leuffen/announcements` currently shows only `0.1.0` published.
+- After trusted publishing was corrected, `npm view @leuffen/announcements` showed `latest: 0.2.1` and published versions `0.1.0`, `0.2.1` before the local `1.0.0` tag was pushed.
 - Publish workflow run `33169502671` for tag `@leuffen/announcements@0.2.1` triggered correctly but failed at `npx nx release publish --access public -p @leuffen/announcements --provenance`; local dry-run of the same Nx publish target succeeds.
 - npm trusted publishing was corrected on 2026-08-28: revoked old trust for `publish-tags.yml` and created trust id `8cdc1624-046f-41ef-8ab4-c2989faf2f7e` for `.github/workflows/publish.yml`.
 - `packages/announcements/package.json` should include repository metadata:
