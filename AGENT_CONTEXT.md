@@ -35,7 +35,7 @@ Last verified: 2026-08-28
 | Package project configs | `packages/*/project.json` |
 | Package build output | `dist/{projectRoot}` (for example `dist/packages/announcements`) |
 | Release publish package root | `dist/{projectRoot}` via `nx-release-publish` targets |
-| Publish workflow | `.github/workflows/publish-tags.yml` |
+| Publish workflow | `.github/workflows/publish.yml` |
 | CI workflow | `.github/workflows/ci.yml` |
 
 Last verified: 2026-08-28
@@ -44,7 +44,7 @@ Last verified: 2026-08-28
 
 | Package | Path | Version | Publish notes |
 | --- | --- | --- | --- |
-| `@leuffen/announcements` | `packages/announcements` | `0.1.1` | public package; patch release tag `@leuffen/announcements@0.1.1` created locally on 2026-08-28; first npm publish completed and trusted publishing configured on 2026-08-28 |
+| `@leuffen/announcements` | `packages/announcements` | `0.2.0` | public package; minor release tag `@leuffen/announcements@0.2.0` created locally on 2026-08-28; first npm publish completed and trusted publishing configured on 2026-08-28 |
 | `@leuffen/demo` | `packages/demo` | `0.0.0` | public package metadata; reference/demo package |
 
 Last verified: 2026-08-28
@@ -53,7 +53,7 @@ Last verified: 2026-08-28
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| `.github/workflows/publish-tags.yml` | push tags matching `*@*.*.*` | install, verify tagged package, publish with `nx release publish --provenance` |
+| `.github/workflows/publish.yml` | push tags matching `**@*.*.*` | install, verify tagged package, publish with `nx release publish --provenance` |
 | `.github/workflows/ci.yml` | verify file when CI behavior matters | CI workflow exists |
 
 Last verified: 2026-08-28
@@ -69,7 +69,7 @@ Last verified: 2026-08-28
 | Vitest workspace | `vitest.workspace.ts` | includes package Vite/Vitest configs |
 | Root TypeScript config | `tsconfig.base.json` | shared TS compiler options and paths |
 | ESLint config | `eslint.config.mjs` | repository lint setup with Nx dependency checks |
-| Publish workflow | `.github/workflows/publish-tags.yml` | tag-based npm publish workflow |
+| Publish workflow | `.github/workflows/publish.yml` | tag-based npm publish workflow; tag pattern must use `**` because scoped package tags contain `/` |
 | Announcements manifest | `packages/announcements/package.json` | package metadata for dist-root publishing (`main`/`types` point to root files) |
 | Announcements Nx project config | `packages/announcements/project.json` | build to `dist/packages/announcements`, publish from that dist root |
 | Announcements usage info | `packages/announcements/.ai-usage-info.md` | usage examples and constraints |
@@ -117,7 +117,7 @@ npm trust list @leuffen/announcements
 # configure trusted publishing after first publish, if missing
 npm trust github @leuffen/announcements \
   --repo leuffen/leuffen-monorepo \
-  --file publish-tags.yml \
+  --file publish.yml \
   --allow-publish \
   --yes
 ```
@@ -126,12 +126,13 @@ npm trust github @leuffen/announcements \
 
 - `npm login` is the correct user command for npm authentication in this environment.
 - `@leuffen/announcements` first manual publish was completed on 2026-08-28.
-- `@leuffen/announcements@0.1.1` patch release commit/tag was created locally on 2026-08-28 with `npx nx release patch --skip-publish -p @leuffen/announcements`; push with tags to trigger publishing.
+- `@leuffen/announcements@0.1.1` patch release commit/tag was created locally on 2026-08-28 with `npx nx release patch --skip-publish -p @leuffen/announcements`.
+- `@leuffen/announcements@0.2.0` minor release commit/tag was created locally on 2026-08-28 with `npx nx release minor --skip-publish -p @leuffen/announcements`; push with tags to trigger publishing.
 - Trusted publishing for `@leuffen/announcements` was configured on 2026-08-28:
   - type: `github`
   - id: `7c11ff5b-722b-481f-9a2e-bc739e395b2b`
   - repository: `leuffen/leuffen-monorepo`
-  - workflow file: `publish-tags.yml`
+  - workflow file: `publish.yml` (verify with `npm trust list`; previous cache may have referred to `publish-tags.yml`)
   - permissions: `publish`
 - After publish/trust setup, `npm dist-tag ls @leuffen/announcements` returned `latest: 0.1.0` and `npm access get status` returned `public`; `npm view` and `npm owner ls` still returned `404` at 2026-08-28 11:17 UTC, likely registry/API propagation or npm endpoint inconsistency. Recheck later if needed.
 - `packages/announcements/package.json` should include repository metadata:
