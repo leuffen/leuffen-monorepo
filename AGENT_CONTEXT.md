@@ -135,7 +135,8 @@ npm trust github @leuffen/announcements \
   - repository: `leuffen/leuffen-monorepo`
   - workflow file: `publish.yml` (verify with `npm trust list`; previous cache may have referred to `publish-tags.yml`)
   - permissions: `publish`
-- After publish/trust setup, `npm dist-tag ls @leuffen/announcements` returned `latest: 0.1.0` and `npm access get status` returned `public`; `npm view` and `npm owner ls` still returned `404` at 2026-08-28 11:17 UTC, likely registry/API propagation or npm endpoint inconsistency. Recheck later if needed.
+- After publish/trust setup, `npm dist-tag ls @leuffen/announcements` returned `latest: 0.1.0` and `npm access get status` returned `public`; `npm view @leuffen/announcements` currently shows only `0.1.0` published.
+- Publish workflow run `33169502671` for tag `@leuffen/announcements@0.2.1` triggered correctly but failed at `npx nx release publish --access public -p @leuffen/announcements --provenance`; local dry-run of the same Nx publish target succeeds, so verify npm trusted publishing/auth for `.github/workflows/publish.yml`.
 - `packages/announcements/package.json` should include repository metadata:
   - `type`: `git`
   - `url`: `git+https://github.com/leuffen/leuffen-monorepo.git`
