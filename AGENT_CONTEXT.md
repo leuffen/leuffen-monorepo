@@ -44,7 +44,7 @@ Last verified: 2026-08-28
 
 | Package | Path | Version | Publish notes |
 | --- | --- | --- | --- |
-| `@leuffen/announcements` | `packages/announcements` | `0.1.0` | public package; first npm publish completed and trusted publishing configured on 2026-08-28 |
+| `@leuffen/announcements` | `packages/announcements` | `0.1.1` | public package; patch release tag `@leuffen/announcements@0.1.1` created locally on 2026-08-28; first npm publish completed and trusted publishing configured on 2026-08-28 |
 | `@leuffen/demo` | `packages/demo` | `0.0.0` | public package metadata; reference/demo package |
 
 Last verified: 2026-08-28
@@ -126,6 +126,7 @@ npm trust github @leuffen/announcements \
 
 - `npm login` is the correct user command for npm authentication in this environment.
 - `@leuffen/announcements` first manual publish was completed on 2026-08-28.
+- `@leuffen/announcements@0.1.1` patch release commit/tag was created locally on 2026-08-28 with `npx nx release patch --skip-publish -p @leuffen/announcements`; push with tags to trigger publishing.
 - Trusted publishing for `@leuffen/announcements` was configured on 2026-08-28:
   - type: `github`
   - id: `7c11ff5b-722b-481f-9a2e-bc739e395b2b`
