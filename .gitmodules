@@ -2,3 +2,4 @@
 	path = .agents/skills/infracamp-ai-skills
 	url = git@github.com:infracamp/infracamp-ai-skills.git
 	branch = main
+	update = merge
