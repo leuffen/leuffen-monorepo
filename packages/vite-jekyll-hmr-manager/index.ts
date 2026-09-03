@@ -60,6 +60,11 @@ export function viteJekyllHmrManager(options: ViteJekyllHmrManagerOptions = {}):
         if (!["add", "change", "unlink"].includes(event)) return;
 
         const relativeFile = path.relative(watchDir, absoluteFile);
+        // Nicht-HTML-Dateien dürfen den Seitenwechsel und den Dialog nicht auslösen.
+        if (!relativeFile.endsWith(".html")) {
+          if (debug) console.log("[vite-jekyll-hmr-manager] ignoring non-HTML change", { event, file: relativeFile });
+          return;
+        }
         if (!extensions.some((extension) => relativeFile.endsWith(extension))) return;
 
         const url = pageUrl(relativeFile);

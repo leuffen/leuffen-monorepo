@@ -76,6 +76,13 @@ Es enthält einen Link zur geänderten Seite und folgende Aktionen:
 
 Die Einstellungen werden mit `sessionStorage` gespeichert und gelten nur für den jeweiligen Browser-Tab. Zusätzlich wird die Vite-Session-ID gespeichert. Bei einem Neustart von Vite ändert sie sich; dann werden die gespeicherten Vorauswahlen gelöscht und der Dialog erscheint wieder.
 
+Der Dialog des Vite-Plugins muss immer eigenständig bleiben. HMR ist ausschließlich
+für die Entwicklungsumgebung vorgesehen; der Dialog darf deshalb keine
+Abhängigkeit von produktiven Website-Komponenten, Theme-Komponenten,
+`@leuffen/announcements` oder anderen Laufzeitpaketen der Website erhalten.
+So bleibt das Plugin unabhängig von der jeweiligen Website und kann in jeder
+Vite-/Jekyll-Entwicklungsumgebung verwendet werden.
+
 ## Vite-HMR und Jekyll-Reload
 
 Vite-HMR bleibt vollständig aktiv. Änderungen an importierten TS-, JS-, CSS- oder SCSS-Modulen werden direkt durch Vite verarbeitet.
