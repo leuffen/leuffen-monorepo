@@ -1,0 +1,36 @@
+{
+  "name": "@leuffen/vite-jekyll-hmr-manager",
+  "version": "1.0.0",
+  "description": "Vite integration for page-aware reloads of Jekyll build output with HMR notifications.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leuffen/leuffen-monorepo.git",
+    "directory": "packages/vite-jekyll-hmr-manager"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "vite build"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md", "package.json"],
+  "peerDependencies": {
+    "vite": ">=6"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0",
+    "vite-plugin-dts": "^4.5.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

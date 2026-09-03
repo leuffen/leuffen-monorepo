@@ -1,0 +1,19 @@
+{
+  "name": "@leuffen/vite-jekyll-hmr-manager",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "{projectRoot}",
+  "projectType": "library",
+  "tags": ["type:package", "scope:vite-jekyll-hmr-manager"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": { "outputPath": "dist/{projectRoot}" },
+      "configurations": {
+        "development": { "mode": "development" },
+        "production": { "mode": "production" }
+      }
+    }
+  }
+}
