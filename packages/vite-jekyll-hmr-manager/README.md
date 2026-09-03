@@ -6,7 +6,8 @@ Vite-Plugin für Jekyll-Entwicklungsumgebungen. Das Paket verbindet Vite-HMR fü
 
 - Vite-HMR bleibt für importierte JavaScript-, TypeScript-, CSS- und SCSS-Module aktiv.
 - Das konfigurierte `watchDir` wird auf Änderungen überwacht.
-- Bei einer Änderung an einer erzeugten HTML-Datei wird nur die zugehörige aktuell geöffnete Seite neu geladen.
+- Bei einer geänderten Dateigröße einer erzeugten HTML-Datei wird nur die zugehörige Seite als geändert gemeldet.
+- Der Dateigrößenvergleich verhindert unnötige Reloads, wenn sich bei jedem Jekyll-Build nur dynamische Datumsangaben oder Cache-Update-IDs ändern, die resultierende HTML-Datei aber gleich groß bleibt.
 - Andere geöffnete Seiten werden nicht neu geladen. Sie erhalten ein kleines Dialogfenster mit einem Link zur aktualisierten Seite.
 - Das Dialogfenster bietet:
   - **Jetzt wechseln**
@@ -57,7 +58,7 @@ Wenn die HTML-Seiten von einem separaten Jekyll-Server über Vite proxied werden
 Der Jekyll-Proxy sollte keinen eigenen LiveReload-Server starten. Für die Proxy-Variante genügt:
 
 ```bash
-jekyll serve --watch --incremental
+jekyll serve --watch
 ```
 
 Das Paket überwacht den Jekyll-Output selbst.
@@ -96,6 +97,12 @@ navigateOnChange?: boolean
 
 Wenn `true`, wird bei einer Änderung an einer anderen Seite direkt zu dieser Seite navigiert. Wenn `false`, erscheint das Dialogfenster. Standard ist `false`.
 
+### Vergleich der Dateigröße
+
+Das Plugin verwendet bewusst die Dateigröße statt eines Inhalts-Hashes. Bei Jekyll ändern sich durch vollständige Builds häufig dynamische Datumsangaben wie `site.time` oder Cache-Update-IDs in Asset-URLs. Wenn dadurch nur der Inhalt ausgetauscht wird, die HTML-Datei aber gleich groß bleibt, soll kein unnötiges Update ausgelöst werden.
+
+Diese Heuristik erkennt keine Inhaltsänderungen, bei denen die Dateigröße unverändert bleibt.
+
 ### `debug`
 
 ```ts
@@ -120,8 +127,9 @@ Beispiel für eine Debug-Ausgabe:
 |---|---|
 | Importierte TS-/JS-Datei | Vite-HMR |
 | Importierte CSS-/SCSS-Datei | Vite-HMR |
-| Erzeugte HTML-Datei der aktuellen Seite | Reload der aktuellen Seite |
-| Erzeugte HTML-Datei einer anderen Seite | Dialog mit Link |
+| Erzeugte HTML-Datei der aktuellen Seite mit geänderter Dateigröße | Reload der aktuellen Seite |
+| Erzeugte HTML-Datei einer anderen Seite mit geänderter Dateigröße | Dialog mit Link |
+| Watcher-Event ohne geänderte Dateigröße | Kein Reload |
 | Andere Datei im Jekyll-Output | Keine Seitenänderung |
 
 ## Paket bauen

@@ -7,7 +7,7 @@ Das Paket verbindet zwei Entwicklungsmechanismen:
 1. Vite-HMR für importierte JavaScript-, TypeScript-, CSS- und SCSS-Module.
 2. Seitenbezogene Reloads für HTML-Dateien, die Jekyll in ein Build-Verzeichnis schreibt.
 
-Jekyll selbst muss dafür keinen LiveReload-Server starten. Es läuft mit `--watch` und möglichst mit `--incremental`. Vite überwacht den Jekyll-Output und übernimmt die Kommunikation mit dem Browser.
+Jekyll selbst muss dafür keinen LiveReload-Server starten. Es läuft mit `--watch` ohne `--incremental`, damit Änderungen an Includes und globalen Abhängigkeiten zuverlässig vollständig gebaut werden. Vite überwacht den Jekyll-Output und übernimmt die Kommunikation mit dem Browser.
 
 ## Aktueller Stand
 
@@ -36,16 +36,17 @@ Das Paket ist als ESM-/CommonJS-Dual-Paket verfügbar und kann deshalb auch aus 
 1. Jekyll erkennt eine Änderung und schreibt die betroffene HTML-Datei in `watchDir`.
 2. Der Vite-Watcher empfängt ein `add`, `change` oder `unlink`-Ereignis.
 3. Das Plugin prüft, ob die Datei innerhalb von `watchDir` liegt und eine überwachte Endung besitzt.
-4. Der Build-Pfad wird in eine Website-URL umgewandelt:
+4. Bei `add`- und `change`-Events wartet das Plugin kurz, liest die Datei und vergleicht ihren SHA-256-Fingerprint mit dem zuletzt bekannten Stand. Unveränderte Dateien lösen keinen Reload aus.
+5. Der Build-Pfad wird in eine Website-URL umgewandelt:
 
    ```text
    /var/www/html/leistungen/therapien.html
    → /leistungen/therapien
    ```
 
-5. Vite sendet ein eigenes WebSocket-Event an die verbundenen Browser.
-6. Zusätzlich sendet Vite einen Full-Reload mit dem HTML-Pfad. Vite lädt dadurch nur den Browser neu, dessen aktuelle URL zu diesem Pfad passt.
-7. Andere geöffnete Seiten zeigen das Dialogfenster mit einem Link zur aktualisierten Seite.
+6. Vite sendet ein eigenes WebSocket-Event an die verbundenen Browser.
+7. Zusätzlich sendet Vite einen Full-Reload mit dem HTML-Pfad. Vite lädt dadurch nur den Browser neu, dessen aktuelle URL zu diesem Pfad passt.
+8. Andere geöffnete Seiten zeigen das Dialogfenster mit einem Link zur aktualisierten Seite.
 
 ## Dialog
 
@@ -90,7 +91,7 @@ Vite-HMR bleibt vollständig aktiv. Änderungen an importierten TS-, JS-, CSS- o
 Für Jekyll darf in der Vite-Proxy-Variante kein zweiter LiveReload-Server gestartet werden. In `/opt/package.json` läuft `jekyll-prox` daher ohne `--livereload`:
 
 ```text
-jekyll serve ... --watch --incremental
+jekyll serve ... --watch
 ```
 
 Die Seitenaktualisierung des Jekyll-Outputs übernimmt ausschließlich das Plugin.
@@ -136,4 +137,4 @@ vite-jekyll-hmr-manager/
 
 ## Bekannte Einschränkung
 
-Jekyll kann bei bestimmten Änderungen mehrere HTML-Dateien neu schreiben. In diesem Fall erhalten alle betroffenen anderen Seiten jeweils ein Änderungsereignis. Durch `--incremental` wird die Anzahl unnötiger Änderungen reduziert, vollständig verhindern lässt sich dies bei Änderungen an globalen Layouts und Includes jedoch nicht.
+Jekyll kann bei bestimmten Änderungen mehrere HTML-Dateien neu schreiben. In diesem Fall erhalten alle betroffenen anderen Seiten jeweils ein Änderungsereignis. Der Fingerprint-Vergleich verhindert Reloads für Dateien, deren Inhalt trotz eines Watcher-Events unverändert geblieben ist. Für zuverlässige Änderungen an globalen Layouts und Includes muss Jekyll ohne `--incremental` laufen.

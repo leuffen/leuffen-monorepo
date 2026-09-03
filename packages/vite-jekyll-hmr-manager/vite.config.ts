@@ -17,7 +17,7 @@ export default defineConfig({
       formats: ["es", "cjs"],
     },
     rollupOptions: {
-      external: ["vite", "node:path"],
+      external: ["vite", "node:path", "node:fs/promises"],
     },
   },
 });

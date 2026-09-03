@@ -90,24 +90,53 @@ if (!customElements.get("vite-jekyll-hmr-dialog")) {
   customElements.define("vite-jekyll-hmr-dialog", ViteJekyllHmrDialog);
 }
 
+function pagePath(value) {
+  const pathname = new URL(value, window.location.origin).pathname;
+  return decodeURI(pathname)
+    .replace(/\\/index\\.html$/, "/")
+    .replace(/\\.html$/, "")
+    .replace(/\\/+$/, "") || "/";
+}
+
 const hot = import.meta.hot;
 if (hot) {
   hot.on("vite-jekyll-hmr-manager:page-changed", ({ url, file, sessionId }) => {
-    const current = decodeURI(window.location.pathname).replace(/\\/$/, "") || "/";
-    const changed = url.replace(/\\/$/, "") || "/";
-    ${debug ? `console.log("[vite-jekyll-hmr-manager] change detected", { changedFile: file, changedPage: url, currentPage: window.location.pathname, currentPageAffected: current === changed, sessionId });` : ""}
-    if (current !== changed) {
-      if (${JSON.stringify(navigateOnChange)}) {
-        window.location.href = url;
-        return;
-      }
-      let dialog = document.querySelector("vite-jekyll-hmr-dialog");
-      if (!dialog) {
-        dialog = document.createElement("vite-jekyll-hmr-dialog");
-        document.body.appendChild(dialog);
-      }
-      dialog.showDialog(url);
+    const current = pagePath(window.location.pathname);
+    const changed = pagePath(url);
+    const currentPageAffected = current === changed;
+    if (currentPageAffected) {
+      console.warn("[vite-jekyll-hmr-manager] reload triggered", {
+        reason: "changedPath matches currentPath",
+        changedFile: file,
+        changedPage: url,
+        currentPage: window.location.pathname,
+        currentPath: current,
+        changedPath: changed,
+        sessionId,
+      });
+      window.location.reload();
+      return;
     }
+    console.warn("[vite-jekyll-hmr-manager] foreign page update received", {
+      reason: "changedPath differs from currentPath",
+      changedFile: file,
+      changedPage: url,
+      currentPage: window.location.pathname,
+      currentPath: current,
+      changedPath: changed,
+      action: ${JSON.stringify(navigateOnChange ? "navigate" : "open-dialog")},
+      sessionId,
+    });
+    if (${JSON.stringify(navigateOnChange)}) {
+      window.location.href = url;
+      return;
+    }
+    let dialog = document.querySelector("vite-jekyll-hmr-dialog");
+    if (!dialog) {
+      dialog = document.createElement("vite-jekyll-hmr-dialog");
+      document.body.appendChild(dialog);
+    }
+    dialog.showDialog(url);
   });
 }
 `;
