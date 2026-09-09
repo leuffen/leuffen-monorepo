@@ -30,8 +30,9 @@ Last verified: 2026-08-28
 | Workspace libs dir | `packages` |
 | Release relationship | `independent` |
 | Release projects | `packages/*` |
-| Release pre-version command | `npx nx run-many -t build` |
+| Release pre-version command | None; tagged packages are built in the publish workflow |
 | Release update dependents | `never` |
+| Release lockfile update | Lifecycle scripts disabled; `--no-audit --no-fund`; lockfile update retained |
 | Package project configs | `packages/*/project.json` |
 | Package build output | `dist/{projectRoot}` (for example `dist/packages/announcements`) |
 | Release publish package root | `dist/{projectRoot}` via `nx-release-publish` targets |
