@@ -29,10 +29,8 @@
     "skills",
     ".agents/skills"
   ],
-  "dependencies": {
-    "lit": "^3.3.3"
-  },
   "peerDependencies": {
+    "lit": "^3.3.3",
     "@nextrap/nte-dialog-component": "^2.0.0"
   },
   "peerDependenciesMeta": {
