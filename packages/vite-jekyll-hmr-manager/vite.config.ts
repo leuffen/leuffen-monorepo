@@ -3,6 +3,7 @@ import dts from "vite-plugin-dts";
 import path from "node:path";
 
 export default defineConfig({
+  root: import.meta.dirname,
   plugins: [
     dts({
       entryRoot: ".",

@@ -1,5 +1,5 @@
 {
-  "name": "@leuffen/announcements",
+  "name": "announcements",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "{projectRoot}",
   "projectType": "library",
