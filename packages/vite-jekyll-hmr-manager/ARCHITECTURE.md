@@ -121,19 +121,9 @@ Bei `debug: false` bleiben diese Ausgaben deaktiviert.
 
 ## Paketaufbau
 
-```text
-vite-jekyll-hmr-manager/
-├── index.ts                 # Vite-Plugin und Watcher-Logik
-├── src/
-│   └── dialog-client.ts     # Browser-Webcomponent und HMR-Clientlogik
-├── README.md
-├── ARCHITECTURE.md
-├── package.json
-└── dist/
-    ├── index.js             # ESM
-    ├── index.cjs            # CommonJS
-    └── index.d.ts           # TypeScript-Deklarationen
-```
+Die Quellen liegen unter `packages/vite-jekyll-hmr-manager/`: `index.ts` enthält das Vite-Plugin und die Watcher-Logik, `src/dialog-client.ts` den Browser-Client.
+
+Nx baut das veröffentlichbare Paket nach `dist/packages/vite-jekyll-hmr-manager/`. Dieser Ordner enthält `package.json`, `README.md`, `index.js` (ESM), `index.cjs` (CommonJS) und `index.d.ts` sowie weitere Typdeklarationen. Alle Paket-Einstiegspunkte beziehen sich auf diese Wurzel. Das Target `nx-release-publish` baut zuerst und veröffentlicht anschließend genau diesen Ordner; der GitHub-Workflow startet nach dem Push eines Nx-Release-Tags.
 
 ## Bekannte Einschränkung
 
