@@ -48,13 +48,15 @@ npm install -D @leuffen/vite-jekyll-hmr-manager
 
 ### Verwendung als Workspace-Paket
 
-Das Paket veröffentlicht ausschließlich die gebauten Dateien unter `dist/`. Ein lokal verlinkter Workspace muss deshalb vor dem Start des verbrauchenden Vite-Projekts gebaut werden:
+Das Paket wird im Monorepo mit Nx gebaut:
 
 ```bash
 npm run build -w @leuffen/vite-jekyll-hmr-manager
 ```
 
-Bei einer normalen Installation aus der npm-Registry ist dieser Schritt nicht erforderlich, weil das veröffentlichte Paket die fertigen ESM-, CommonJS- und Typdateien bereits enthält.
+Der veröffentlichbare Paketordner ist `dist/packages/vite-jekyll-hmr-manager` relativ zur Monorepo-Wurzel. Für lokale Tests diesen gebauten Ordner verlinken oder daraus mit `npm pack` ein Tarball erstellen und im verbrauchenden Projekt installieren. Der Quellordner unter `packages/` ist kein gebautes npm-Paket.
+
+Bei einer normalen Installation aus der npm-Registry ist kein Build erforderlich; das Paket enthält ESM-, CommonJS- und Typdateien direkt in seiner Wurzel.
 
 ## Jekyll-Proxy-Setup
 
@@ -142,18 +144,23 @@ Beispiel für eine Debug-Ausgabe:
 | Watcher-Event ohne geänderte Dateigröße | Kein Reload |
 | Andere Datei im Jekyll-Output | Keine Seitenänderung |
 
-## Paket bauen
+## Paket bauen und veröffentlichen
 
-Das Paket wird als ESM-/CommonJS-Dual-Paket gebaut:
+Aus der Monorepo-Wurzel:
 
 ```bash
-npm run build
+npx nx build @leuffen/vite-jekyll-hmr-manager
+cd dist/packages/vite-jekyll-hmr-manager
+npm pack --dry-run
 ```
 
-Dabei entstehen:
+Der Build-Ordner enthält `package.json`, `README.md`, `index.js` (ESM), `index.cjs` (CommonJS) und `index.d.ts` einschließlich weiterer Typdeklarationen. Nx Release veröffentlicht diesen Ordner direkt; im npm-Paket gibt es keinen zusätzlichen `dist/`-Unterordner.
 
-```text
-dist/index.js
-dist/index.cjs
-dist/index.d.ts
+Eine neue Version aus der Monorepo-Wurzel erstellen und samt Release-Tag pushen:
+
+```bash
+npx nx release patch --skip-publish -p @leuffen/vite-jekyll-hmr-manager
+git push --follow-tags
 ```
+
+Der bestehende GitHub-Workflow `.github/workflows/publish.yml` reagiert auf den Release-Tag, baut das Paket und veröffentlicht es mit `nx release publish --provenance`. Die npm-Berechtigung für Trusted Publishing muss für dieses Paket auf `leuffen/leuffen-monorepo` und `publish.yml` eingerichtet sein. Auch beim direkten Aufruf des Nx-Publish-Targets wird zuerst das Build-Target ausgeführt.
