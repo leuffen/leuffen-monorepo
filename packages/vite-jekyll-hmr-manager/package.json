@@ -1,6 +1,6 @@
 {
   "name": "@leuffen/vite-jekyll-hmr-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Vite integration for page-aware reloads of Jekyll build output with HMR notifications.",
   "repository": {
     "type": "git",
