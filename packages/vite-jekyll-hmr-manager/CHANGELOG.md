@@ -1,3 +1,7 @@
+## 1.0.4 (2026-09-10)
+
+This was a version bump only for vite-jekyll-hmr-manager to align it with other projects, there were no code changes.
+
 ## 1.0.3 (2026-09-10)
 
 ### 🩹 Fixes
