@@ -46,6 +46,16 @@ Das Paket kann direkt aus npm oder über einen Workspace installiert werden:
 npm install -D @leuffen/vite-jekyll-hmr-manager
 ```
 
+### Verwendung als Workspace-Paket
+
+Das Paket veröffentlicht ausschließlich die gebauten Dateien unter `dist/`. Ein lokal verlinkter Workspace muss deshalb vor dem Start des verbrauchenden Vite-Projekts gebaut werden:
+
+```bash
+npm run build -w @leuffen/vite-jekyll-hmr-manager
+```
+
+Bei einer normalen Installation aus der npm-Registry ist dieser Schritt nicht erforderlich, weil das veröffentlichte Paket die fertigen ESM-, CommonJS- und Typdateien bereits enthält.
+
 ## Jekyll-Proxy-Setup
 
 Wenn die HTML-Seiten von einem separaten Jekyll-Server über Vite proxied werden, kann Vite `transformIndexHtml` nicht auf die Jekyll-Antwort anwenden. In diesem Fall müssen im Jekyll-Layout beide Vite-Module eingebunden werden:

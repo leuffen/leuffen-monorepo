@@ -24,7 +24,7 @@
   },
   "files": ["dist", "README.md", "package.json"],
   "peerDependencies": {
-    "vite": ">=6"
+    "vite": "^6.0.0 || ^7.0.0"
   },
   "devDependencies": {
     "vite": "^7.0.0",
