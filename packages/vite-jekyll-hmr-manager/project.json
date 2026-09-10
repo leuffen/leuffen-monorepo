@@ -1,5 +1,5 @@
 {
-  "name": "@leuffen/vite-jekyll-hmr-manager",
+  "name": "vite-jekyll-hmr-manager",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "{projectRoot}",
   "projectType": "library",
