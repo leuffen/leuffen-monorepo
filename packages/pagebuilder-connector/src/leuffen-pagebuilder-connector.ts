@@ -5,10 +5,18 @@ import { pagebuilderConfig } from './pagebuilder-config.js';
  */
 export class LeuffenPagebuilderConnector extends HTMLElement {
   connectedCallback(): void {
-    pagebuilderConfig.baseUrl = this.getAttribute('base-url');
-    pagebuilderConfig.subscriptionId = this.getAttribute('subscription-id');
-    pagebuilderConfig.scopeId = this.getAttribute('scope-id');
-    pagebuilderConfig.fileName = this.getAttribute('file-name');
+    if (this.hasAttribute('base-url')) {
+      pagebuilderConfig.baseUrl = this.getAttribute('base-url');
+    }
+    if (this.hasAttribute('subscription-id')) {
+      pagebuilderConfig.subscriptionId = this.getAttribute('subscription-id');
+    }
+    if (this.hasAttribute('scope-id')) {
+      pagebuilderConfig.scopeId = this.getAttribute('scope-id');
+    }
+    if (this.hasAttribute('file-name')) {
+      pagebuilderConfig.fileName = this.getAttribute('file-name');
+    }
   }
 }
 
