@@ -1,8 +1,7 @@
 # @leuffen/pagebuilder-connector
 
-The package registers the `<leuffen-pagebuilder-edit>` Web Component.
-It displays an edit icon as an inline SVG and links to the PageBuilder for the
-current page. No additional UI framework is required.
+This package provides two Web Components: a configuration-only connector
+and an edit button with an inline SVG pencil icon.
 
 ## Installation
 
@@ -10,56 +9,56 @@ current page. No additional UI framework is required.
 npm install @leuffen/pagebuilder-connector
 ```
 
-## Configuration
+## Configuration and usage
 
-Set the PageBuilder base URL with `base-path` and provide the subscription ID
-through `window['micx-subscription']` before the element initializes:
+Configure the connector once and place edit buttons wherever needed:
 
 ```html
-<script>
-  window['micx-subscription'] = { subscriptionId: 'site-123' };
-</script>
+<leuffen-pagebuilder-connector
+  base-url="https://pagebuilder.example.com/edit"
+  subscription-id="site-123"
+  scope-id=""
+  file-name="pages/home.md"
+></leuffen-pagebuilder-connector>
 
-<leuffen-pagebuilder-edit
-  base-path="https://pagebuilder.example.com/edit"
-></leuffen-pagebuilder-edit>
+<leuffen-pagebuilder-edit-button></leuffen-pagebuilder-edit-button>
 
 <script type="module">
   import '@leuffen/pagebuilder-connector';
 </script>
 ```
 
-For the example, the link points to the configured URL with the query
-parameters `subscription=site-123` and `path=<current pathname>`. The path
-comes from `window.location.pathname`.
+The connector is not visible. Clicking the edit icon opens the PageBuilder
+using the connector's configuration. With this example, the URL contains
+`subscription=site-123` and `path=pages%2Fhome.md`. The optional
+`scope` parameter is omitted because `scope-id` is empty.
 
-### Configuration options
+### Connector attributes
 
-| Source | Option | Purpose |
+| Attribute | Required | Description |
 | --- | --- | --- |
-| Element attribute | `base-path` | PageBuilder edit URL (required unless supplied globally) |
-| Element attribute | `subscription-id` | Overrides the global subscription ID |
-| `window['micx-subscription']` | `subscriptionId` or `id` | Subscription ID |
-| `window['micx-subscription']` | `pagebuilderBasePath` or `basePath` | Optional base URL |
+| `base-url` | Yes | PageBuilder edit endpoint |
+| `subscription-id` | Yes | Subscription identifier |
+| `scope-id` | No | Scope identifier; empty or omitted skips `scope` |
+| `file-name` | Yes | Target file relative to the site's content root |
 
-The subscription global may also be a string containing the ID. For
-compatibility, the component also accepts `window['mix-subscription']` or
-`window.micxSubscription`.
+The filename is passed as the `path` URL parameter; it is not inferred from
+the current browser URL. The edit button has no configuration attributes.
+It reads the nearest enclosing connector, if present, otherwise the first
+connector in the document.
 
-To configure everything directly on the component instead, replace the
-global configuration and element above with:
+A connector can also enclose its buttons:
 
 ```html
-<leuffen-pagebuilder-edit
-  subscription-id="site-456"
-  base-path="https://pagebuilder.example.com/edit"
-></leuffen-pagebuilder-edit>
+<leuffen-pagebuilder-connector
+  base-url="https://pagebuilder.example.com/edit"
+  subscription-id="site-123"
+  file-name="pages/contact.md"
+>
+  <leuffen-pagebuilder-edit-button></leuffen-pagebuilder-edit-button>
+</leuffen-pagebuilder-connector>
 ```
 
-The icon link is refreshed when clicked or when configuration attributes
-change. If the ID or base path is unavailable, the icon remains visible
-without a navigation target. The consuming website must enforce authorization
-for the PageBuilder separately.
-
-The query parameter names `subscription` and `path` are the connector's
-current URL convention and must match the PageBuilder frontend.
+The edit link is refreshed when clicked. If no connector is available or
+required values are missing, the button remains visible without a link.
+Authorization must be enforced by the PageBuilder, not by the button.
