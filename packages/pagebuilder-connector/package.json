@@ -23,9 +23,16 @@
   },
   "files": [
     "*.*",
+    "src",
     ".ai-usage-info.md"
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "happy-dom": "^20.11.12"
   }
 }
