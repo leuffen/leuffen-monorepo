@@ -4,7 +4,20 @@
     "outDir": "../../dist",
     "declaration": true,
     "declarationMap": true,
-    "noEmit": false
+    "noEmit": false,
+    "types": [
+      "node",
+      "vite/client"
+    ]
   },
-  "include": ["index.ts"]
+  "include": [
+    "index.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "vite.config.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
 }
