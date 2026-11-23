@@ -1,6 +1,6 @@
 # @leuffen/pagebuilder-connector
 
-This package provides two Web Components: a configuration-only connector
+This package registers two Web Components: an invisible PageBuilder connector
 and an edit button with an inline SVG pencil icon.
 
 ## Installation
@@ -11,7 +11,7 @@ npm install @leuffen/pagebuilder-connector
 
 ## Configuration and usage
 
-Configure the connector once and place edit buttons wherever needed:
+Configure the connector before placing edit buttons:
 
 ```html
 <leuffen-pagebuilder-connector
@@ -28,10 +28,10 @@ Configure the connector once and place edit buttons wherever needed:
 </script>
 ```
 
-The connector is not visible. Clicking the edit icon opens the PageBuilder
-using the connector's configuration. With this example, the URL contains
-`subscription=site-123` and `path=pages%2Fhome.md`. The optional
-`scope` parameter is omitted because `scope-id` is empty.
+The connector reads its attributes in `connectedCallback` and stores them in
+the shared `pagebuilderConfig` object. Edit buttons read this configuration
+only when clicked. At that moment the button constructs the edit URL and
+navigates using `window.location.assign()`. No anchor or `href` is rendered.
 
 ### Connector attributes
 
@@ -42,23 +42,12 @@ using the connector's configuration. With this example, the URL contains
 | `scope-id` | No | Scope identifier; empty or omitted skips `scope` |
 | `file-name` | Yes | Target file relative to the site's content root |
 
-The filename is passed as the `path` URL parameter; it is not inferred from
-the current browser URL. The edit button has no configuration attributes.
-It reads the nearest enclosing connector, if present, otherwise the first
-connector in the document.
+The click navigation uses the query parameters `subscription`, `path`
+(from `file-name`) and optionally `scope`. The filename is not inferred from
+the current browser URL.
 
-A connector can also enclose its buttons:
-
-```html
-<leuffen-pagebuilder-connector
-  base-url="https://pagebuilder.example.com/edit"
-  subscription-id="site-123"
-  file-name="pages/contact.md"
->
-  <leuffen-pagebuilder-edit-button></leuffen-pagebuilder-edit-button>
-</leuffen-pagebuilder-connector>
-```
-
-The edit link is refreshed when clicked. If no connector is available or
-required values are missing, the button remains visible without a link.
-Authorization must be enforced by the PageBuilder, not by the button.
+One connector configures all edit buttons on the page. If more than one
+connector is connected, the most recently connected one replaces the shared
+configuration. Attribute changes take effect after the connector is
+reconnected to the DOM. Without required values, clicking has no effect.
+Authorization must be enforced by the PageBuilder.
