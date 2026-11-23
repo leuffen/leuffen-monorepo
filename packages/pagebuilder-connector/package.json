@@ -1,0 +1,31 @@
+{
+  "name": "@leuffen/pagebuilder-connector",
+  "version": "0.0.0",
+  "description": "PageBuilder edit link web component for Leuffen websites.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leuffen/leuffen-monorepo.git",
+    "directory": "packages/pagebuilder-connector"
+  },
+  "type": "module",
+  "sideEffects": [
+    "./index.js"
+  ],
+  "main": "./index.js",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "*.*",
+    ".ai-usage-info.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
