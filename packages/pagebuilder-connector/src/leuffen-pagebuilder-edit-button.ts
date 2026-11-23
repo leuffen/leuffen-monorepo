@@ -1,11 +1,11 @@
-import { LeuffenPagebuilderConnector } from './leuffen-pagebuilder-connector.js';
+import { pagebuilderConfig } from './pagebuilder-config.js';
 
 /**
- * Renders the PageBuilder edit icon and uses the shared connector configuration.
+ * Zeigt das Edit-Icon und navigiert erst beim Klick zum PageBuilder.
  */
 export class LeuffenPagebuilderEditButton extends HTMLElement {
   connectedCallback(): void {
-    this.innerHTML = `<a part="link" aria-label="Edit page" title="Edit page">
+    this.innerHTML = `<button type="button" part="button" aria-label="Edit page" title="Edit page">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
         viewBox="0 0 24 24" fill="none" stroke="currentColor"
         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -13,33 +13,30 @@ export class LeuffenPagebuilderEditButton extends HTMLElement {
         <path d="M12 20h9"/>
         <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L9 17l-4 1 1-4Z"/>
       </svg>
-    </a>`;
+    </button>`;
 
-    this.querySelector('a')?.addEventListener('click', this.updateLink);
-    this.updateLink();
+    this.querySelector('button')?.addEventListener('click', this.openPagebuilder);
   }
 
   disconnectedCallback(): void {
-    this.querySelector('a')?.removeEventListener('click', this.updateLink);
+    this.querySelector('button')?.removeEventListener('click', this.openPagebuilder);
   }
 
-  private readonly updateLink = (): void => {
-    const anchor = this.querySelector('a');
-    if (!anchor) return;
+  private readonly openPagebuilder = (): void => {
+    const { baseUrl, subscriptionId, scopeId, fileName } = pagebuilderConfig;
+    if (!baseUrl || !subscriptionId || !fileName) return;
 
-    const connector = this.closest('leuffen-pagebuilder-connector') ??
-      document.querySelector('leuffen-pagebuilder-connector');
+    const url = new URL(baseUrl, document.baseURI);
+    url.searchParams.set('subscription', subscriptionId);
+    url.searchParams.set('path', fileName);
 
-    const url = connector instanceof LeuffenPagebuilderConnector
-      ? connector.getEditUrl()
-      : null;
-
-    if (url === null) {
-      anchor.removeAttribute('href');
-      return;
+    if (scopeId) {
+      url.searchParams.set('scope', scopeId);
+    } else {
+      url.searchParams.delete('scope');
     }
 
-    anchor.href = url;
+    window.location.assign(url.href);
   };
 }
 
