@@ -8,47 +8,20 @@ import '@leuffen/announcements';
 
 ## Input Data
 
-Nutze das vorhandene Array `window.openhours.vacation` für alle Meldungen.
-Das vollständige Format steht in
-[openhours.schema.json](../../../../openhours.schema.json).
+Pflege die Öffnungszeiten und alle drei Meldungstypen ausschließlich in
+`_data/openhours.yml`. Verwende als Vorlage
+[openhours.example.yml](../../../../openhours.example.yml); das verbindliche
+Datenformat steht in [openhours.schema.json](../../../../openhours.schema.json).
+
+Binde die Daten einmal im gemeinsamen Jekyll-Layout (z. B. im Head) vor der
+Initialisierung der Komponenten ein. Wie im
+[ThemeJS2-Basislayout](https://github.com/leuffen/themejs2/blob/main/docs/_layouts/10_blanc.html)
+serialisiert der Liquid-Filter `jsonify` die vollständigen YAML-Daten beim
+Jekyll-Build direkt nach `window.openhours`. Kein manuell gepflegtes
+JavaScript-Datenobjekt und keine separate JSON-Datei anlegen.
 
 ```html
-<script>
-  window.openhours = {
-    _editor: 'openhours/v1',
-    _status_values: ['Offen', 'Nach Vereinbarung'],
-    table: [{ day: 'Montag', time: '08:00 – 12:00' }],
-    json: [{ dayOfWeek: '1', from: '08:00', till: '12:00', status: 'Offen' }],
-    vacation: [
-      {
-        type: 'vacation',
-        from: '2026-12-24',
-        till: '2026-12-31',
-        title: '**Urlaub vom 24.12. bis 31.12.**',
-        text: 'Bitte wenden Sie sich an unsere Vertretung.',
-        popup: true,
-        is_closed: true,
-        variant: 'info',
-      },
-      {
-        type: 'info',
-        from: '',
-        till: '',
-        title: 'Geänderte Sprechzeiten',
-        text: 'Bitte vereinbaren Sie einen Termin.',
-        variant: 'warning',
-      },
-      {
-        type: 'popup',
-        from: '2026-12-01',
-        till: '2026-12-07',
-        title: 'Telefonische Erreichbarkeit',
-        text: 'Bitte nutzen Sie unser Kontaktformular.',
-        variant: 'danger',
-      },
-    ],
-  };
-</script>
+<script>window.openhours = {{ site.data.openhours | jsonify }};</script>
 ```
 
 ## Seitenbereiche

@@ -18,46 +18,19 @@ import '@leuffen/announcements';
 
 ## Input Data
 
-`window.openhours` muss vor der Initialisierung gesetzt sein. Alle drei
-Meldungstypen stehen im bestehenden Array `vacation`.
+Pflege alle Daten in `_data/openhours.yml`, entsprechend dem kommentierten
+[openhours.example.yml](openhours.example.yml) und dem
+[openhours.schema.json](openhours.schema.json). Alle drei Meldungstypen stehen
+im bestehenden Array `vacation`.
+
+Serialisiere die vollständigen Daten wie im
+[ThemeJS2-Basislayout](https://github.com/leuffen/themejs2/blob/main/docs/_layouts/10_blanc.html)
+einmal im gemeinsamen Jekyll-Layout, vor der Initialisierung der Komponenten.
+`jsonify` erzeugt das JSON beim Build direkt aus `site.data.openhours`;
+die Daten werden nicht zusätzlich im JavaScript gepflegt.
 
 ```html
-<script>
-  window.openhours = {
-    _editor: 'openhours/v1',
-    _status_values: ['Offen', 'Nach Vereinbarung'],
-    table: [{ day: 'Montag', time: '08:00 – 12:00' }],
-    json: [{ dayOfWeek: '1', from: '08:00', till: '12:00', status: 'Offen' }],
-    vacation: [
-      {
-        type: 'vacation',
-        from: '2026-12-24',
-        till: '2026-12-31',
-        title: '**Urlaub vom 24.12. bis 31.12.**',
-        text: 'Bitte wenden Sie sich an unsere Vertretung.',
-        popup: true,
-        is_closed: true,
-        variant: 'info',
-      },
-      {
-        type: 'info',
-        from: '',
-        till: '',
-        title: 'Geänderte Sprechzeiten',
-        text: 'Bitte vereinbaren Sie einen Termin.',
-        variant: 'warning',
-      },
-      {
-        type: 'popup',
-        from: '2026-12-01',
-        till: '2026-12-07',
-        title: 'Telefonische Erreichbarkeit',
-        text: 'Bitte nutzen Sie unser Kontaktformular.',
-        variant: 'danger',
-      },
-    ],
-  };
-</script>
+<script>window.openhours = {{ site.data.openhours | jsonify }};</script>
 ```
 
 ## Verwendung in verschiedenen Seitenbereichen
