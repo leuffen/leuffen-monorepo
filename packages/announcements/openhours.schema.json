@@ -25,6 +25,40 @@
         ]
       ]
     },
+    "_features": {
+      "type": "object",
+      "description": "Optionale, kundenspezifische Freigabe der Meldungstypen im Page Builder. false blendet den Typ im Editor aus; fehlende Schalter gelten als true. Vorhandene Meldungen werden nicht gelöscht und die Website-Darstellung bleibt unverändert.",
+      "properties": {
+        "vacation": {
+          "type": "boolean",
+          "description": "Urlaub / Kurzmeldungen im Editor anbieten.",
+          "default": true
+        },
+        "info": {
+          "type": "boolean",
+          "description": "Hinweistexte im Editor anbieten.",
+          "default": true
+        },
+        "popup": {
+          "type": "boolean",
+          "description": "Eigenständige Popups im Editor anbieten.",
+          "default": true
+        }
+      },
+      "additionalProperties": true,
+      "examples": [
+        {
+          "vacation": true,
+          "info": true,
+          "popup": true
+        },
+        {
+          "vacation": true,
+          "info": false,
+          "popup": false
+        }
+      ]
+    },
     "table": {
       "type": "array",
       "description": "Sichtbare Öffnungszeiten-Tabelle der Website. Die Reihenfolge entspricht der Anzeige; Tage und Zeiten sind Freitext.",

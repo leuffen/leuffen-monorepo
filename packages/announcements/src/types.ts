@@ -24,6 +24,8 @@ export interface LeuVacation {
 
 export class LeuOpenHours {
   public _editor?: string;
+  /** Optionale Freigaben nur für den Page-Builder-Editor. */
+  public _features?: Partial<Record<AnnouncementType, boolean>>;
   public table?: Array<{ day: string; time: string }>;
   public _status_values?: string[];
   public json?: LeuOpenHour[];

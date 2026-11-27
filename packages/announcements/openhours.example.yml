@@ -10,6 +10,14 @@ _status_values:
   - "Offen"
   - "Nach Vereinbarung"
 
+# Optionale Features des Page Builders; alle standardmäßig true.
+# false blendet den Typ im Editor aus, ohne vorhandene Meldungen zu löschen.
+# Fehlende/auskommentierte Schalter gelten als true.
+_features:
+  vacation: true # Urlaub / Kurzmeldungen
+  info: true     # Hinweise im Seiteninhalt
+  popup: true    # Eigenständige Popups
+
 # Sichtbare Tabelle auf der Website. Tag und Uhrzeit sind Freitext.
 table:
   # Montag mit Mittagspause.
@@ -19,27 +27,6 @@ table:
   # Freitext statt fester Uhrzeit.
   - day: "Dienstag"
     time: "Nach Vereinbarung"
-
-# Maschinenlesbare Intervalle. 0 = Sonntag, 1 = Montag, …, 6 = Samstag.
-# Zeiten als Strings H:MM oder HH:MM; mehrere Intervalle je Tag möglich.
-json:
-  # Montagvormittag; geöffnet.
-  - dayOfWeek: "1"
-    from: "08:00"
-    till: "12:00"
-    status: "Offen"
-
-  # Montagnachmittag; zweites Intervall am selben Tag.
-  - dayOfWeek: "1"
-    from: "14:00"
-    till: "18:00"
-    status: "Offen"
-
-  # Nur nach Vereinbarung; wird nicht automatisch als geöffnet gewertet.
-  - dayOfWeek: "2"
-    from: "09:00"
-    till: "12:00"
-    status: "Nach Vereinbarung"
 
 # Alle drei Meldungstypen im selben Array: vacation, info, popup.
 # Die Reihenfolge bleibt erhalten. Ohne type gelten Altdaten als vacation.
@@ -111,3 +98,24 @@ vacation:
     popup: false
     is_closed: false
     variant: "danger"
+
+# Maschinenlesbare Intervalle. 0 = Sonntag, 1 = Montag, …, 6 = Samstag.
+# Zeiten als Strings H:MM oder HH:MM; mehrere Intervalle je Tag möglich.
+json:
+  # Montagvormittag; geöffnet.
+  - dayOfWeek: "1"
+    from: "08:00"
+    till: "12:00"
+    status: "Offen"
+
+  # Montagnachmittag; zweites Intervall am selben Tag.
+  - dayOfWeek: "1"
+    from: "14:00"
+    till: "18:00"
+    status: "Offen"
+
+  # Nur nach Vereinbarung; wird nicht automatisch als geöffnet gewertet.
+  - dayOfWeek: "2"
+    from: "09:00"
+    till: "12:00"
+    status: "Nach Vereinbarung"
