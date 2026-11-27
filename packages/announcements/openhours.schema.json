@@ -1,0 +1,320 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Open Hours – Öffnungszeiten, Urlaub und Meldungen",
+  "description": "Beschreibt die YAML-Datei _data/openhours.yml (als JSON-Datenmodell, nicht den API-DTO) des Leuffen Page Builders. Die drei Bereiche können unabhängig voneinander leer sein oder fehlen. Zusätzliche Website-spezifische Felder auf Dokument- und Zeilenebene bleiben beim Speichern erhalten. Die Standardwerte beschreiben das Einlesen älterer Dateien; JSON Schema selbst ergänzt keine Werte.",
+  "type": "object",
+  "properties": {
+    "_editor": {
+      "type": "string",
+      "description": "Kennung des Editors für diese Datei.",
+      "examples": [
+        "openhours/v1"
+      ]
+    },
+    "_status_values": {
+      "type": "array",
+      "description": "Website-spezifische Liste der im Editor angebotenen Statuswerte. Der Editor verändert diese Liste nicht. Vorhandene Statuswerte aus json werden zusätzlich angeboten.",
+      "items": {
+        "type": "string",
+        "description": "Ein frei konfigurierter Statuswert."
+      },
+      "examples": [
+        [
+          "Offen",
+          "Nach Vereinbarung"
+        ]
+      ]
+    },
+    "_features": {
+      "type": "object",
+      "description": "Optionale, kundenspezifische Freigabe der Meldungstypen im Page Builder. false blendet den Typ im Editor aus; fehlende Schalter gelten als true. Vorhandene Meldungen werden nicht gelöscht. Ein leuffen-announcements-Element mit explizit deaktiviertem type bleibt leer und gibt eine Warnung in der Browserkonsole aus. Ohne expliziten Typ bleibt die bisherige Darstellung unverändert.",
+      "properties": {
+        "vacation": {
+          "type": "boolean",
+          "description": "Urlaub / Kurzmeldungen im Editor anbieten.",
+          "default": true
+        },
+        "info": {
+          "type": "boolean",
+          "description": "Hinweistexte im Editor anbieten.",
+          "default": true
+        },
+        "popup": {
+          "type": "boolean",
+          "description": "Eigenständige Popups im Editor anbieten.",
+          "default": true
+        }
+      },
+      "additionalProperties": true,
+      "examples": [
+        {
+          "vacation": true,
+          "info": true,
+          "popup": true
+        },
+        {
+          "vacation": true,
+          "info": false,
+          "popup": false
+        }
+      ]
+    },
+    "table": {
+      "type": "array",
+      "description": "Sichtbare Öffnungszeiten-Tabelle der Website. Die Reihenfolge entspricht der Anzeige; Tage und Zeiten sind Freitext.",
+      "items": {
+        "$ref": "#/definitions/tableRow"
+      }
+    },
+    "json": {
+      "type": "array",
+      "description": "Maschinenlesbare Öffnungsintervalle, beispielsweise für Terminplanung und Terminvorschläge. Mehrere Intervalle pro Wochentag sind möglich.",
+      "items": {
+        "$ref": "#/definitions/timeRow"
+      }
+    },
+    "vacation": {
+      "type": "array",
+      "description": "Liste von Urlauben, Kurzmeldungen, Hinweisen und eigenständigen Popups. Die Reihenfolge bleibt beim Speichern erhalten.",
+      "items": {
+        "$ref": "#/definitions/vacationRow"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "definitions": {
+    "time": {
+      "type": "string",
+      "description": "Uhrzeit im Format H:MM oder HH:MM (0:00 bis 23:59). Ein leerer String ist für unvollständige Einträge erlaubt.",
+      "pattern": "^(?:(?:[01]?[0-9]|2[0-3]):[0-5][0-9])?$(?![\\s\\S])",
+      "default": "",
+      "examples": [
+        "8:15",
+        "08:15",
+        "23:59",
+        ""
+      ]
+    },
+    "date": {
+      "description": "Kalenderdatum im Format JJJJ-MM-TT oder leer, wenn keine Datumsgrenze eingetragen ist. Das Backend prüft auch die Gültigkeit des Kalenderdatums.",
+      "anyOf": [
+        {
+          "type": "string",
+          "const": ""
+        },
+        {
+          "type": "string",
+          "format": "date",
+          "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$(?![\\s\\S])"
+        }
+      ],
+      "default": "",
+      "examples": [
+        "2026-12-24",
+        ""
+      ]
+    },
+    "tableRow": {
+      "type": "object",
+      "description": "Eine sichtbare Tabellenzeile. Fehlende Textfelder werden als leere Strings gelesen.",
+      "properties": {
+        "day": {
+          "type": "string",
+          "description": "Tag oder Tagesgruppe als Freitext.",
+          "default": "",
+          "examples": [
+            "Mo – Fr",
+            "Samstag"
+          ]
+        },
+        "time": {
+          "type": "string",
+          "description": "Angezeigte Uhrzeiten, mehrere Intervalle oder ein Freitext-Hinweis.",
+          "default": "",
+          "examples": [
+            "08:00 – 12:00 und 14:00 – 18:00",
+            "Nach Vereinbarung"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "timeRow": {
+      "type": "object",
+      "description": "Ein strukturiertes Zeitintervall für einen einzelnen Wochentag. Fehlende Tages- und Zeitfelder werden als leere Strings gelesen.",
+      "properties": {
+        "dayOfWeek": {
+          "description": "Wochentag: 0 = Sonntag, 1 = Montag, 2 = Dienstag, 3 = Mittwoch, 4 = Donnerstag, 5 = Freitag, 6 = Samstag. Ein leerer String ist für einen Entwurf erlaubt. Der Page Builder speichert Strings; ältere numerische YAML-Werte werden als Strings gelesen.",
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "",
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6"
+              ]
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            }
+          ],
+          "default": "",
+          "examples": [
+            "1",
+            "6"
+          ]
+        },
+        "from": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/time"
+            }
+          ],
+          "description": "Beginn des Zeitintervalls; H:MM, HH:MM oder leer."
+        },
+        "till": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/time"
+            }
+          ],
+          "description": "Ende des Zeitintervalls; H:MM, HH:MM oder leer."
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Frei konfigurierbarer Status, üblicherweise aus _status_values. Vorhandene andere Statuswerte sind ebenfalls erlaubt. Kein Status: null oder leerer String (wird beim Speichern zu null).",
+          "default": null,
+          "examples": [
+            "Offen",
+            "Nach Vereinbarung",
+            null
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "vacationRow": {
+      "type": "object",
+      "description": "Eine Urlaubsmeldung, ein Hinweis oder ein Popup mit optionalem Anzeigezeitraum. Fehlende Text- und Datumsfelder werden als leere Strings gelesen. Die neuen Einträge im Editor verwenden popup: false, während ältere Dateien ohne popup beim Einlesen popup: true erhalten.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Meldungstyp: vacation = Urlaub oder Kurzmeldung, optional mit Popup und Schließung; info = eigenständiger Hinweistext; popup = eigenständiges Popup. Die Optionen popup und is_closed im Dialog beziehen sich auf vacation.",
+          "enum": [
+            "vacation",
+            "info",
+            "popup"
+          ],
+          "default": "vacation"
+        },
+        "from": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/date"
+            }
+          ],
+          "description": "Erster Tag des Anzeigezeitraums; bei Urlaub Beginn der Aktivierung des optionalen Popups bzw. der Schließung. Leer, wenn keine untere Datumsgrenze gesetzt ist."
+        },
+        "till": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/date"
+            }
+          ],
+          "description": "Letzter Tag des Anzeigezeitraums. Danach soll die Meldung automatisch ausgeblendet werden. Leer, wenn keine obere Datumsgrenze gesetzt ist. Im Editor darf till nicht vor from liegen, wenn beide angegeben sind."
+        },
+        "title": {
+          "type": "string",
+          "description": "Kurze Überschrift oder Ankündigung. Bei Urlaub sollte sie auch den tatsächlichen Urlaubszeitraum in lesbarer Form enthalten.",
+          "default": "",
+          "examples": [
+            "Urlaub vom 24.12. bis 31.12.2026",
+            "Geänderte Sprechzeiten"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "description": "Ausführlicher Hinweistext, zum Beispiel Vertretung oder Abwesenheitsnotiz. Der Editor bietet ihn bei info, popup und bei vacation mit aktiviertem Popup an.",
+          "default": "",
+          "examples": [
+            "In dringenden Fällen wenden Sie sich bitte an unsere Vertretung."
+          ]
+        },
+        "popup": {
+          "type": "boolean",
+          "description": "Nur für vacation: zusätzlich zur Kurzmeldung ein Popup im angegebenen Zeitraum anzeigen. Beim Lesen älterer Einträge ohne dieses Feld gilt true; neu im Editor angelegte Meldungen starten mit false. Für type popup ist der Meldungstyp selbst maßgeblich.",
+          "default": true
+        },
+        "is_closed": {
+          "type": "boolean",
+          "description": "Nur für vacation: Praxis im angegebenen Zeitraum als geschlossen markieren. Bei info und popup wird diese Option im Editor nicht angeboten.",
+          "default": false
+        },
+        "variant": {
+          "type": "string",
+          "description": "Darstellungsvariante für Hinweise und eigenständige Popups: danger = kritisch, warning = Warnung, info = Information, success = Erfolg. Bei vacation wird die Variante im Editor nicht zur Auswahl angeboten.",
+          "enum": [
+            "danger",
+            "warning",
+            "info",
+            "success"
+          ],
+          "default": "info"
+        }
+      },
+      "additionalProperties": true,
+      "examples": [
+        {
+          "type": "vacation",
+          "from": "2026-12-24",
+          "till": "2026-12-31",
+          "title": "Urlaub vom 24.12. bis 31.12.2026",
+          "text": "Bitte wenden Sie sich an unsere Vertretung.",
+          "popup": true,
+          "is_closed": true,
+          "variant": "info"
+        },
+        {
+          "type": "vacation",
+          "from": "",
+          "till": "",
+          "title": "Nächste Woche geänderte Sprechzeiten",
+          "text": "",
+          "popup": false,
+          "is_closed": false,
+          "variant": "info"
+        },
+        {
+          "type": "info",
+          "from": "",
+          "till": "",
+          "title": "Geänderte Sprechzeiten",
+          "text": "Bitte vereinbaren Sie einen Termin.",
+          "popup": false,
+          "is_closed": false,
+          "variant": "warning"
+        },
+        {
+          "type": "popup",
+          "from": "2026-12-01",
+          "till": "2026-12-07",
+          "title": "Wichtiger Hinweis",
+          "text": "Die Praxis ist vorübergehend telefonisch nicht erreichbar.",
+          "popup": false,
+          "is_closed": false,
+          "variant": "danger"
+        }
+      ]
+    }
+  }
+}
