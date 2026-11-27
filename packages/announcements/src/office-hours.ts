@@ -1,4 +1,9 @@
-import type { LeuOpenHours } from './types.js';
+import type {
+  AnnouncementType,
+  AnnouncementVariant,
+  LeuOpenHours,
+  LeuVacation,
+} from './types.js';
 
 export interface OpenHour {
   from: string;
@@ -10,6 +15,13 @@ export interface Vacation {
   tillDate: Date;
   title: string;
   text: string;
+}
+
+export interface Announcement extends Vacation {
+  type: AnnouncementType;
+  popup: boolean;
+  is_closed: boolean;
+  variant: AnnouncementVariant;
 }
 
 export interface TimeInterval {
@@ -29,7 +41,7 @@ const DAY_OF_WEEK = [
 
 export class OfficeHours {
   private openHours: Map<string, OpenHour[]> = new Map();
-  private vacations: Vacation[] = [];
+  private announcements: Announcement[] = [];
 
   private static convertToDateTime(input: Date | string | null): Date | null {
     if (input === null || input === undefined) return null;
@@ -40,7 +52,7 @@ export class OfficeHours {
 
   addOpenHour(dayOfWeek: string, from: string, till: string): void {
     const dayHours = this.openHours.get(dayOfWeek) || [];
-    dayHours.push({ from, till });
+    dayHours.push({ from: from.padStart(5, '0'), till: till.padStart(5, '0') });
     this.openHours.set(dayOfWeek, dayHours);
   }
 
@@ -50,27 +62,54 @@ export class OfficeHours {
     title: string,
     text: string,
   ): void {
-    const fromDateTime = OfficeHours.convertToDateTime(fromDate);
-    const tillDateEod = OfficeHours.convertToDateTime(tillDate);
-    if (fromDateTime === null || tillDateEod === null) return;
+    this.addAnnouncement(fromDate, tillDate, title, text, {});
+  }
 
-    tillDateEod.setHours(23, 59, 59, 999);
-    this.vacations.push({
-      fromDate: fromDateTime,
-      tillDate: tillDateEod,
+  private addAnnouncement(
+    from: Date | string,
+    till: Date | string,
+    title: string,
+    text: string,
+    options: LeuVacation,
+  ): void {
+    // Leere Datumsgrenzen erlauben zeitlich unbegrenzte Meldungen.
+    const fromDate = from === '' ? new Date(-8640000000000000) : new Date(from);
+    const tillDate = till === '' ? new Date(8640000000000000) : new Date(till);
+    if (!Number.isFinite(fromDate.getTime()) || !Number.isFinite(tillDate.getTime())) return;
+    if (till !== '') tillDate.setHours(23, 59, 59, 999);
+
+    const type = options.type ?? 'vacation';
+    // Altdaten ohne Typ waren immer Urlaub mit Popup und Schließung.
+    this.announcements.push({
+      fromDate,
+      tillDate,
       title,
       text,
+      type,
+      popup: options.popup ?? (type === 'vacation'),
+      is_closed: type === 'vacation' && (options.is_closed ?? options.type === undefined),
+      variant: options.variant ?? 'info',
     });
+  }
+
+  private activeAt(announcement: Announcement, date: Date): boolean {
+    return date >= announcement.fromDate && date <= announcement.tillDate;
+  }
+
+  private getClosedVacation(date: Date): Announcement | undefined {
+    return this.announcements.find(
+      (announcement) =>
+        announcement.type === 'vacation' &&
+        announcement.is_closed &&
+        this.activeAt(announcement, date),
+    );
   }
 
   isVacation(date: Date | string | null = null): boolean {
     const dateTime = OfficeHours.convertToDateTime(date ?? new Date());
-    return this.vacations.some(
-      (vacation) =>
-        vacation.fromDate !== null &&
-        dateTime !== null &&
-        dateTime >= vacation.fromDate &&
-        dateTime <= vacation.tillDate,
+    return dateTime !== null && this.announcements.some(
+      (announcement) =>
+        announcement.type === 'vacation' && this.activeAt(announcement, dateTime),
     );
   }
 
@@ -80,25 +119,54 @@ export class OfficeHours {
     const dateTime = OfficeHours.convertToDateTime(date ?? new Date());
     if (dateTime === null) return null;
 
-    const vacation = this.vacations.find(
-      (current) => dateTime >= current.fromDate && dateTime <= current.tillDate,
+    const vacation = this.announcements.find(
+      (current) => current.type === 'vacation' && this.activeAt(current, dateTime),
     );
     return vacation ? { title: vacation.title, text: vacation.text } : null;
+  }
+
+  /**
+   * Meldungen für die Seitenbereiche: Urlaub auch im Voraus, andere Typen
+   * nur im aktiven Anzeigezeitraum. Ohne Typ werden alle Typen berücksichtigt.
+   * Beispiel: officeHours.getAnnouncements('info').
+   */
+  getAnnouncements(type: string | null = null, date = new Date()): Announcement[] {
+    return this.announcements.filter(
+      (announcement) =>
+        (!type || announcement.type === type) &&
+        (announcement.type === 'vacation'
+          ? announcement.tillDate >= date
+          : this.activeAt(announcement, date)),
+    );
+  }
+
+  /** Erster aktiver Popup-Hinweis in der Reihenfolge von openhours.vacation. */
+  getActivePopup(date = new Date()): { title: string; text: string } | null {
+    const popup = this.announcements.find(
+      (announcement) =>
+        (announcement.type === 'popup' ||
+          (announcement.type === 'vacation' && announcement.popup)) &&
+        this.activeAt(announcement, date),
+    );
+    return popup ? { title: popup.title, text: popup.text } : null;
   }
 
   getUpcomingVacation(interval: TimeInterval | null = null): Vacation[] {
     const currentDate = new Date();
     const endDate = new Date(currentDate);
 
+    const vacations = this.announcements
+      .filter((announcement) => announcement.type === 'vacation')
+      .map(({ fromDate, tillDate, title, text }) => ({ fromDate, tillDate, title, text }));
     if (interval === null) {
-      return this.vacations.filter(
+      return vacations.filter(
         (vacation) => vacation.tillDate >= currentDate,
       );
     }
     if (interval.days) endDate.setDate(endDate.getDate() + interval.days);
     if (interval.months) endDate.setMonth(endDate.getMonth() + interval.months);
 
-    return this.vacations.filter(
+    return vacations.filter(
       (vacation) =>
         (vacation.fromDate >= currentDate && vacation.fromDate <= endDate) ||
         (vacation.tillDate >= currentDate && vacation.tillDate <= endDate) ||
@@ -111,9 +179,9 @@ export class OfficeHours {
     if (dateObject === null) return false;
 
     return (
-      !this.isVacation(dateObject) &&
+      !this.getClosedVacation(dateObject) &&
       this.getTodayOpenDates(dateObject).some((hour) => {
-        const currentTime = `${dateObject.getHours()}:${String(dateObject.getMinutes()).padStart(2, '0')}`;
+        const currentTime = `${String(dateObject.getHours()).padStart(2, '0')}:${String(dateObject.getMinutes()).padStart(2, '0')}`;
         return currentTime >= hour.from && currentTime <= hour.till;
       })
     );
@@ -121,7 +189,7 @@ export class OfficeHours {
 
   getNextOpenDate(dateTime: Date | string | null = null): Date {
     const nextDate = OfficeHours.convertToDateTime(dateTime) as Date;
-    while (this.isVacation(nextDate) || !this.isOpen(nextDate)) {
+    while (!this.isOpen(nextDate)) {
       nextDate.setHours(0, 0, 0, 0);
       nextDate.setDate(nextDate.getDate() + 1);
     }
@@ -136,15 +204,15 @@ export class OfficeHours {
 
   getHumanReadableOpenDates(dateTime: Date | string | null = null): string {
     const dateObject = OfficeHours.convertToDateTime(dateTime) as Date;
-    if (this.isVacation(dateObject)) {
-      const vacation = this.getVacation(dateObject);
-      return `Closed due to vacation: ${vacation?.title}. Next open date: ${DAY_OF_WEEK[this.getNextOpenDate(dateObject).getDay()]} ${this.getNextOpenDate(dateObject).toLocaleDateString()} at 9:00.`;
+    const vacation = this.getClosedVacation(dateObject);
+    if (vacation) {
+      return `Closed due to vacation: ${vacation.title}. Next open date: ${DAY_OF_WEEK[this.getNextOpenDate(dateObject).getDay()]} ${this.getNextOpenDate(dateObject).toLocaleDateString()} at 9:00.`;
     }
     if (this.isOpen(dateObject)) {
       const openHours = this.getTodayOpenDates(dateObject);
       const currentOpenHour = openHours.find(
         (hour) =>
-          `${dateObject.getHours()}:${String(dateObject.getMinutes()).padStart(2, '0')}` <=
+          `${String(dateObject.getHours()).padStart(2, '0')}:${String(dateObject.getMinutes()).padStart(2, '0')}` <=
           hour.till,
       );
       return `Currently open till ${currentOpenHour?.till}. Next open date: ${DAY_OF_WEEK[this.getNextOpenDate(dateObject).getDay()]} at 9:00.`;
@@ -161,26 +229,26 @@ export class OfficeHours {
 
   loadStruct(inputData: LeuOpenHours): void {
     this.openHours.clear();
-    this.vacations = [];
+    this.announcements = [];
 
-    inputData.json.forEach((hour) => {
-      if (hour.status === 'open') {
-        const day =
-          typeof hour.dayOfWeek === 'number'
-            ? DAY_OF_WEEK[hour.dayOfWeek]
-            : hour.dayOfWeek;
-        this.addOpenHour(day, hour.from as string, hour.to as string);
-      }
-    });
+    for (const hour of inputData.json ?? []) {
+      if (hour.status !== 'open' && hour.status !== 'Offen') continue;
+      const weekday = String(hour.dayOfWeek ?? '');
+      const day = /^[0-6]$/.test(weekday) ? DAY_OF_WEEK[Number(weekday)] : weekday;
+      const from = String(hour.from ?? '');
+      const till = String(hour.till ?? hour.to ?? '');
+      if (!day || !from || !till) continue;
+      this.addOpenHour(day, from, till);
+    }
 
-    if (!Array.isArray(inputData.vacation)) return;
-    inputData.vacation.forEach((vacation) => {
-      this.addVacation(
-        vacation.from,
-        vacation.till,
-        vacation.title,
-        vacation.text,
+    for (const vacation of inputData.vacation ?? []) {
+      this.addAnnouncement(
+        vacation.from ?? '',
+        vacation.till ?? '',
+        vacation.title ?? '',
+        vacation.text ?? '',
+        vacation,
       );
-    });
+    }
   }
 }

@@ -25,17 +25,34 @@ export class LeuffenAnnouncements extends HTMLElement {
     if (dataClass !== null) announcements.className = dataClass;
     this.append(announcements);
 
-    let messageCount = 0;
-    for (const vacation of openhours.getUpcomingVacation(null)) {
-      messageCount++;
-      const paragraph = document.createElement('p');
-      paragraph.dataset['owner'] = 'leuffen-announcement';
-      paragraph.innerHTML = markdownToHtml(vacation.title);
-      announcements.append(paragraph);
+    const messages = openhours.getAnnouncements(this.getAttribute('type'));
+    this.classList.toggle('no-announcements', messages.length === 0);
+    for (const message of messages) {
+      const item = document.createElement('div');
+      item.dataset['owner'] = 'leuffen-announcement';
+      item.classList.add(
+        'announcement',
+        `announcement-${message.type}`,
+        `announcement-variant-${message.variant}`,
+      );
+      if (message.type === 'vacation' && message.popup) item.classList.add('has-popup');
+      if (message.is_closed) item.classList.add('is-closed');
+
+      // Urlaubsbanner zeigen weiterhin nur den Titel; Hinweise auch den Text.
+      const title = document.createElement('p');
+      title.className = 'announcement-title';
+      title.innerHTML = markdownToHtml(message.title);
+      item.append(title);
+      if (message.type !== 'vacation' && message.text) {
+        const body = document.createElement('div');
+        body.className = 'announcement-text';
+        body.innerHTML = markdownToHtml(message.text.replace(/\n/g, '<br>'));
+        item.append(body);
+      }
+      announcements.append(item);
     }
 
-    if (messageCount === 0) {
-      this.classList.add('no-announcements');
+    if (messages.length === 0) {
       this.innerHTML = this.defaultMarkup;
     }
   }

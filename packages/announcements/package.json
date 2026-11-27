@@ -19,7 +19,8 @@
       "types": "./index.d.ts",
       "import": "./index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./openhours.schema.json": "./openhours.schema.json"
   },
   "files": [
     "*.*",

@@ -18,7 +18,13 @@ export default defineConfig(() => ({
   },
   plugins: [
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md', '.ai-usage-info.md', 'skills/**/*', '.agents/skills/**/*']),
+    nxCopyAssetsPlugin([
+      '*.md',
+      '.ai-usage-info.md',
+      'openhours.schema.json',
+      'skills/**/*',
+      '.agents/skills/**/*',
+    ]),
     dts({
       entryRoot: '.',
       tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json'),

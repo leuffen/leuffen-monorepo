@@ -23,10 +23,10 @@ export class LeuffenVacationModal extends HTMLElement {
     openhours.loadStruct(window.openhours);
     console.log('[leuffen-vacation-modal] openhours loaded', openhours);
 
-    if (openhours.isVacation(null)) {
-      console.log('[leuffen-vacation-modal] showing vacation modal');
-      const vacation = openhours.getVacation(null);
-      if (vacation !== null) await LeuffenVacationDialog.show(vacation);
+    const popup = openhours.getActivePopup();
+    if (popup !== null) {
+      console.log('[leuffen-vacation-modal] showing announcement modal');
+      await LeuffenVacationDialog.show(popup);
     }
   }
 }
