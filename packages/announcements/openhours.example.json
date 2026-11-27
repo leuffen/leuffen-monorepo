@@ -1,0 +1,99 @@
+{
+  "_editor": "openhours/v1",
+  "_status_values": [
+    "Offen",
+    "Nach Vereinbarung"
+  ],
+  "table": [
+    {
+      "day": "Montag",
+      "time": "08:00 – 12:00 und 14:00 – 18:00"
+    },
+    {
+      "day": "Dienstag",
+      "time": "Nach Vereinbarung"
+    }
+  ],
+  "json": [
+    {
+      "dayOfWeek": "1",
+      "from": "08:00",
+      "till": "12:00",
+      "status": "Offen"
+    },
+    {
+      "dayOfWeek": "1",
+      "from": "14:00",
+      "till": "18:00",
+      "status": "Offen"
+    },
+    {
+      "dayOfWeek": "2",
+      "from": "09:00",
+      "till": "12:00",
+      "status": "Nach Vereinbarung"
+    }
+  ],
+  "vacation": [
+    {
+      "type": "vacation",
+      "from": "2026-12-24",
+      "till": "2026-12-31",
+      "title": "Urlaub vom 24.12. bis 31.12.2026",
+      "text": "Bitte wenden Sie sich an unsere Vertretung.",
+      "popup": true,
+      "is_closed": true,
+      "variant": "info"
+    },
+    {
+      "type": "vacation",
+      "from": "2027-01-08",
+      "till": "2027-01-08",
+      "title": "Am 08.01. nur eingeschränkte Sprechzeiten",
+      "text": "",
+      "popup": false,
+      "is_closed": false,
+      "variant": "info"
+    },
+    {
+      "type": "info",
+      "from": "",
+      "till": "",
+      "title": "Terminvereinbarung",
+      "text": "Bitte vereinbaren Sie vor Ihrem Besuch einen Termin.",
+      "popup": false,
+      "is_closed": false,
+      "variant": "info"
+    },
+    {
+      "type": "info",
+      "from": "2026-12-01",
+      "till": "2026-12-10",
+      "title": "Eingeschränkte Erreichbarkeit",
+      "text": "Bitte rechnen Sie mit längeren Wartezeiten.",
+      "popup": false,
+      "is_closed": false,
+      "variant": "warning"
+    },
+    {
+      "type": "info",
+      "from": "2026-12-11",
+      "till": "",
+      "title": "Online-Terminbuchung verfügbar",
+      "text": "Sie können ab sofort Termine online buchen.",
+      "popup": false,
+      "is_closed": false,
+      "variant": "success"
+    },
+    {
+      "type": "popup",
+      "from": "2026-12-01",
+      "till": "2026-12-07",
+      "title": "Telefonische Störung",
+      "text": "Bitte nutzen Sie unser Kontaktformular.",
+      "popup": false,
+      "is_closed": false,
+      "variant": "danger"
+    }
+  ]
+}

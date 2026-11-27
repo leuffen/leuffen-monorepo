@@ -1,0 +1,113 @@
+# yaml-language-server: $schema=./openhours.schema.json
+# Beispiel für _data/openhours.yml; dieselben Daten wie openhours.example.json.
+# Datumswerte und Uhrzeiten in Anführungszeichen lassen.
+
+# Kennung für den Öffnungszeiten-Editor im Page Builder.
+_editor: "openhours/v1"
+
+# Frei konfigurierbare Statuswerte für strukturierte Öffnungszeiten.
+_status_values:
+  - "Offen"
+  - "Nach Vereinbarung"
+
+# Sichtbare Tabelle auf der Website. Tag und Uhrzeit sind Freitext.
+table:
+  # Montag mit Mittagspause.
+  - day: "Montag"
+    time: "08:00 – 12:00 und 14:00 – 18:00"
+
+  # Freitext statt fester Uhrzeit.
+  - day: "Dienstag"
+    time: "Nach Vereinbarung"
+
+# Maschinenlesbare Intervalle. 0 = Sonntag, 1 = Montag, …, 6 = Samstag.
+# Zeiten als Strings H:MM oder HH:MM; mehrere Intervalle je Tag möglich.
+json:
+  # Montagvormittag; geöffnet.
+  - dayOfWeek: "1"
+    from: "08:00"
+    till: "12:00"
+    status: "Offen"
+
+  # Montagnachmittag; zweites Intervall am selben Tag.
+  - dayOfWeek: "1"
+    from: "14:00"
+    till: "18:00"
+    status: "Offen"
+
+  # Nur nach Vereinbarung; wird nicht automatisch als geöffnet gewertet.
+  - dayOfWeek: "2"
+    from: "09:00"
+    till: "12:00"
+    status: "Nach Vereinbarung"
+
+# Alle drei Meldungstypen im selben Array: vacation, info, popup.
+# Die Reihenfolge bleibt erhalten. Ohne type gelten Altdaten als vacation.
+vacation:
+  # 1. Urlaub: Titel vorab sichtbar, Popup und Schließung im Zeitraum.
+  # vacation = Urlaubs-/Kurzmeldung, info = Hinweis, popup = Dialog.
+  - type: "vacation"
+    # Beginn des Anzeigezeitraums; leer = ohne Startgrenze.
+    from: "2026-12-24"
+    # Letzter Tag einschließlich Tagesende; leer = ohne Endgrenze.
+    till: "2026-12-31"
+    # Überschrift; bei Urlaub Zeitraum im Titel nennen.
+    title: "Urlaub vom 24.12. bis 31.12.2026"
+    # Ausführlicher Text; bei Urlaub für den optionalen Popup-Dialog.
+    text: "Bitte wenden Sie sich an unsere Vertretung."
+    # Nur vacation: zusätzlichen Dialog im Zeitraum öffnen. Bei Altdaten ohne Flag gilt true.
+    popup: true
+    # Nur vacation: Praxis im Zeitraum als geschlossen markieren. Bei neuem Format standardmäßig false.
+    is_closed: true
+    # Darstellung: danger = kritisch, warning = Warnung, info = Information, success = Erfolg.
+    variant: "info"
+
+  # Kurzmeldung: nur Titel, weder Popup noch automatische Schließung.
+  - type: "vacation"
+    from: "2027-01-08"
+    till: "2027-01-08"
+    title: "Am 08.01. nur eingeschränkte Sprechzeiten"
+    text: ""
+    popup: false
+    is_closed: false
+    variant: "info"
+
+  # 2. Hinweis im Seiteninhalt: dauerhaft, ohne Datumsgrenzen.
+  - type: "info"
+    from: ""
+    till: ""
+    title: "Terminvereinbarung"
+    text: "Bitte vereinbaren Sie vor Ihrem Besuch einen Termin."
+    popup: false
+    is_closed: false
+    variant: "info"
+
+  # Zeitlich begrenzter Warnhinweis.
+  - type: "info"
+    from: "2026-12-01"
+    till: "2026-12-10"
+    title: "Eingeschränkte Erreichbarkeit"
+    text: "Bitte rechnen Sie mit längeren Wartezeiten."
+    popup: false
+    is_closed: false
+    variant: "warning"
+
+  # Erfolgshinweis ab Startdatum ohne Enddatum.
+  - type: "info"
+    from: "2026-12-11"
+    till: ""
+    title: "Online-Terminbuchung verfügbar"
+    text: "Sie können ab sofort Termine online buchen."
+    popup: false
+    is_closed: false
+    variant: "success"
+
+  # 3. Eigenständiges Popup: type steuert den Dialog; popup-Flag nur für vacation.
+  - type: "popup"
+    from: "2026-12-01"
+    till: "2026-12-07"
+    title: "Telefonische Störung"
+    text: "Bitte nutzen Sie unser Kontaktformular."
+    popup: false
+    is_closed: false
+    variant: "danger"
