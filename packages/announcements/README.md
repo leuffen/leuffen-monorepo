@@ -25,12 +25,13 @@ im bestehenden Array `vacation`.
 
 Serialisiere die vollständigen Daten wie im
 [ThemeJS2-Basislayout](https://github.com/leuffen/themejs2/blob/main/docs/_layouts/10_blanc.html)
-einmal im gemeinsamen Jekyll-Layout, vor der Initialisierung der Komponenten.
+mit der folgenden Zeile im vorhandenen `<script>`-Tag von
+`docs/_layouts/10_blanc.html`, vor der Initialisierung der Komponenten.
 `jsonify` erzeugt das JSON beim Build direkt aus `site.data.openhours`;
 die Daten werden nicht zusätzlich im JavaScript gepflegt.
 
-```html
-<script>window.openhours = {{ site.data.openhours | jsonify }};</script>
+```liquid
+window.openhours = {{ site.data.openhours | jsonify }};
 ```
 
 ## Verwendung in verschiedenen Seitenbereichen

@@ -13,15 +13,15 @@ Pflege die Öffnungszeiten und alle drei Meldungstypen ausschließlich in
 [openhours.example.yml](../../../../openhours.example.yml); das verbindliche
 Datenformat steht in [openhours.schema.json](../../../../openhours.schema.json).
 
-Binde die Daten einmal im gemeinsamen Jekyll-Layout (z. B. im Head) vor der
-Initialisierung der Komponenten ein. Wie im
+Ergänze die folgende Zeile im bereits vorhandenen `<script>`-Tag in
+`docs/_layouts/10_blanc.html`, vor der Initialisierung der Komponenten. Wie im
 [ThemeJS2-Basislayout](https://github.com/leuffen/themejs2/blob/main/docs/_layouts/10_blanc.html)
 serialisiert der Liquid-Filter `jsonify` die vollständigen YAML-Daten beim
 Jekyll-Build direkt nach `window.openhours`. Kein manuell gepflegtes
 JavaScript-Datenobjekt und keine separate JSON-Datei anlegen.
 
-```html
-<script>window.openhours = {{ site.data.openhours | jsonify }};</script>
+```liquid
+window.openhours = {{ site.data.openhours | jsonify }};
 ```
 
 ## Seitenbereiche
