@@ -22,7 +22,6 @@ export default defineConfig(() => ({
       '*.md',
       '.ai-usage-info.md',
       'openhours.schema.json',
-      'openhours.example.json',
       'openhours.example.yml',
       'skills/**/*',
       '.agents/skills/**/*',

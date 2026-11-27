@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=./openhours.schema.json
-# Beispiel für _data/openhours.yml; dieselben Daten wie openhours.example.json.
+# Beispiel für _data/openhours.yml.
 # Datumswerte und Uhrzeiten in Anführungszeichen lassen.
 
 # Kennung für den Öffnungszeiten-Editor im Page Builder.
