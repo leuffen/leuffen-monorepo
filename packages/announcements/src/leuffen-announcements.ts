@@ -1,5 +1,6 @@
 import { domReady, markdownToHtml, sleep } from './functions.js';
 import { OfficeHours } from './office-hours.js';
+import type { AnnouncementType } from './types.js';
 
 export class LeuffenAnnouncements extends HTMLElement {
   private defaultMarkup: string | null = null;
@@ -14,10 +15,19 @@ export class LeuffenAnnouncements extends HTMLElement {
       return;
     }
 
+    const type = this.getAttribute('type');
+    if (this.defaultMarkup === null) this.defaultMarkup = this.innerHTML;
+
+    // Ein explizit deaktivierter Typ darf auch keinen Fallback anzeigen.
+    if (type !== null && window.openhours._features?.[type as AnnouncementType] === false) {
+      console.warn(`[leuffen-announcements] Announcement type "${type}" is disabled (window.openhours._features.${type} = false). Nothing will be displayed.`);
+      this.classList.add('no-announcements');
+      this.replaceChildren();
+      return;
+    }
+
     const openhours = new OfficeHours();
     openhours.loadStruct(window.openhours);
-
-    if (this.defaultMarkup === null) this.defaultMarkup = this.innerHTML;
     this.innerHTML = '';
 
     const announcements = document.createElement('div');
@@ -25,7 +35,7 @@ export class LeuffenAnnouncements extends HTMLElement {
     if (dataClass !== null) announcements.className = dataClass;
     this.append(announcements);
 
-    const messages = openhours.getAnnouncements(this.getAttribute('type'));
+    const messages = openhours.getAnnouncements(type);
     this.classList.toggle('no-announcements', messages.length === 0);
     for (const message of messages) {
       const item = document.createElement('div');

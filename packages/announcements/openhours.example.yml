@@ -12,6 +12,8 @@ _status_values:
 
 # Optionale Features des Page Builders; alle standardmäßig true.
 # false blendet den Typ im Editor aus, ohne vorhandene Meldungen zu löschen.
+# <leuffen-announcements type="..."> bleibt bei deaktiviertem Typ leer
+# und gibt eine Warnung in der Browserkonsole aus.
 # Fehlende/auskommentierte Schalter gelten als true.
 _features:
   vacation: true # Urlaub / Kurzmeldungen

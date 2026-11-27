@@ -27,7 +27,7 @@
     },
     "_features": {
       "type": "object",
-      "description": "Optionale, kundenspezifische Freigabe der Meldungstypen im Page Builder. false blendet den Typ im Editor aus; fehlende Schalter gelten als true. Vorhandene Meldungen werden nicht gelöscht und die Website-Darstellung bleibt unverändert.",
+      "description": "Optionale, kundenspezifische Freigabe der Meldungstypen im Page Builder. false blendet den Typ im Editor aus; fehlende Schalter gelten als true. Vorhandene Meldungen werden nicht gelöscht. Ein leuffen-announcements-Element mit explizit deaktiviertem type bleibt leer und gibt eine Warnung in der Browserkonsole aus. Ohne expliziten Typ bleibt die bisherige Darstellung unverändert.",
       "properties": {
         "vacation": {
           "type": "boolean",
